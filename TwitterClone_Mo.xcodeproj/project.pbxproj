@@ -9,21 +9,29 @@
 /* Begin PBXBuildFile section */
 		A9D7D5E42924B2D000697376 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D7D5E32924B2D000697376 /* AppDelegate.swift */; };
 		A9D7D5E62924B2D000697376 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D7D5E52924B2D000697376 /* SceneDelegate.swift */; };
-		A9D7D5E82924B2D000697376 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D7D5E72924B2D000697376 /* ViewController.swift */; };
 		A9D7D5EB2924B2D000697376 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9D7D5E92924B2D000697376 /* Main.storyboard */; };
 		A9D7D5ED2924B2D400697376 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A9D7D5EC2924B2D400697376 /* Assets.xcassets */; };
 		A9D7D5F02924B2D400697376 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9D7D5EE2924B2D400697376 /* LaunchScreen.storyboard */; };
+		A9D7D5FF2924B43700697376 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D7D5FE2924B43700697376 /* MainTabController.swift */; };
+		A9D7D6012924BB0000697376 /* FeedController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D7D6002924BB0000697376 /* FeedController.swift */; };
+		A9D7D6032924BB7B00697376 /* ExploreController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D7D6022924BB7B00697376 /* ExploreController.swift */; };
+		A9D7D6052924BCCF00697376 /* NotificationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D7D6042924BCCF00697376 /* NotificationsController.swift */; };
+		A9D7D6072924BCE800697376 /* ConversationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D7D6062924BCE800697376 /* ConversationsController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		A9D7D5E02924B2D000697376 /* TwitterClone_Mo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwitterClone_Mo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9D7D5E32924B2D000697376 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A9D7D5E52924B2D000697376 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		A9D7D5E72924B2D000697376 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		A9D7D5EA2924B2D000697376 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A9D7D5EC2924B2D400697376 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A9D7D5EF2924B2D400697376 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A9D7D5F12924B2D400697376 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A9D7D5FE2924B43700697376 /* MainTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabController.swift; sourceTree = "<group>"; };
+		A9D7D6002924BB0000697376 /* FeedController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedController.swift; sourceTree = "<group>"; };
+		A9D7D6022924BB7B00697376 /* ExploreController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreController.swift; sourceTree = "<group>"; };
+		A9D7D6042924BCCF00697376 /* NotificationsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsController.swift; sourceTree = "<group>"; };
+		A9D7D6062924BCE800697376 /* ConversationsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,15 +64,67 @@
 		A9D7D5E22924B2D000697376 /* TwitterClone_Mo */ = {
 			isa = PBXGroup;
 			children = (
+				A9D7D5FD2924B36700697376 /* Models */,
+				A9D7D5FC2924B36500697376 /* View */,
+				A9D7D5FB2924B36500697376 /* ViewModel */,
+				A9D7D5FA2924B36400697376 /* Controller */,
+				A9D7D5F82924B33D00697376 /* API */,
+				A9D7D5F72924B2FE00697376 /* Utils */,
 				A9D7D5E32924B2D000697376 /* AppDelegate.swift */,
 				A9D7D5E52924B2D000697376 /* SceneDelegate.swift */,
-				A9D7D5E72924B2D000697376 /* ViewController.swift */,
 				A9D7D5E92924B2D000697376 /* Main.storyboard */,
 				A9D7D5EC2924B2D400697376 /* Assets.xcassets */,
 				A9D7D5EE2924B2D400697376 /* LaunchScreen.storyboard */,
 				A9D7D5F12924B2D400697376 /* Info.plist */,
 			);
 			path = TwitterClone_Mo;
+			sourceTree = "<group>";
+		};
+		A9D7D5F72924B2FE00697376 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		A9D7D5F82924B33D00697376 /* API */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		A9D7D5FA2924B36400697376 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				A9D7D5FE2924B43700697376 /* MainTabController.swift */,
+				A9D7D6002924BB0000697376 /* FeedController.swift */,
+				A9D7D6022924BB7B00697376 /* ExploreController.swift */,
+				A9D7D6042924BCCF00697376 /* NotificationsController.swift */,
+				A9D7D6062924BCE800697376 /* ConversationsController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		A9D7D5FB2924B36500697376 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		A9D7D5FC2924B36500697376 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		A9D7D5FD2924B36700697376 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -138,9 +198,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A9D7D5E82924B2D000697376 /* ViewController.swift in Sources */,
+				A9D7D6052924BCCF00697376 /* NotificationsController.swift in Sources */,
+				A9D7D6072924BCE800697376 /* ConversationsController.swift in Sources */,
 				A9D7D5E42924B2D000697376 /* AppDelegate.swift in Sources */,
+				A9D7D6032924BB7B00697376 /* ExploreController.swift in Sources */,
 				A9D7D5E62924B2D000697376 /* SceneDelegate.swift in Sources */,
+				A9D7D5FF2924B43700697376 /* MainTabController.swift in Sources */,
+				A9D7D6012924BB0000697376 /* FeedController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,7 +351,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RAJ2UPL4CG;
+				DEVELOPMENT_TEAM = URTJJ24R4X;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TwitterClone_Mo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -315,7 +379,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RAJ2UPL4CG;
+				DEVELOPMENT_TEAM = URTJJ24R4X;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TwitterClone_Mo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
