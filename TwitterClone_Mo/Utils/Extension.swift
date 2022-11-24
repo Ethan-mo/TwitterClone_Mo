@@ -18,7 +18,6 @@ extension UIView {
                 paddingRight: CGFloat = 0,
                 width: CGFloat? = nil,
                 height: CGFloat? = nil) {
-        
         translatesAutoresizingMaskIntoConstraints = false
         
         if let top = top {
@@ -92,4 +91,7 @@ extension UIColor {
     }
     
     static let twitterBlue = UIColor.rgb(red: 29, green: 161, blue: 242)
+    static let mainBlue = UIColor(named: "mainBlue")
+    static let customRed = UIColor(named: "customRed")
+    static let customPurple = UIColor(named: "customPurple")
 }
