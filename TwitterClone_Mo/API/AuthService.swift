@@ -19,6 +19,12 @@ struct AuthCredentials{
 struct AuthService{
     static let shared = AuthService()
     
+    func logUserIn(withEmail email: String, password: String, completion: @escaping (AuthDataResult?, Error?) -> Void) {
+        // 분명 위에 AuthCredentials struct가 있지만, 우리에게는 email과 password만 필요하니....
+        print("DEBUG: Email is \(email), password is \(password)")
+        Auth.auth().signIn(withEmail: email, password: password, completion: completion)
+    }
+    
     func registerUser(credentials:AuthCredentials, completion: @escaping(Error?, DatabaseReference) -> Void){
         let email = credentials.email
         let password = credentials.password
