@@ -31,6 +31,9 @@ class MainTabController: UITabBarController {
         
     }
     // MARK: - API
+    func fetchUser() {
+        UserService.shared.fetchUser()
+    }
     
     func authenticateUserAndConfigureUI(){
         if Auth.auth().currentUser == nil{
@@ -45,6 +48,8 @@ class MainTabController: UITabBarController {
             configureViewControllers()
             tabBar.backgroundColor = #colorLiteral(red: 0.9832744988, green: 0.9905122324, blue: 0.9633532572, alpha: 1)
             configureUI()
+            fetchUser()
+            
         }
     }
     
