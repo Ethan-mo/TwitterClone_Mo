@@ -6,9 +6,11 @@
 //
 
 import UIKit
+import SDWebImage
 
 class UploadTweetController: UIViewController {
     // MARK: - Properties
+    var user : User
     
     // lazy로 처리해줘야, actionButton이 호출될 때 초기화를한다.
     /// 아래에서는, addTarget의 첫번째 매개변수인 self가 의미하는 viewController가 아직 초기화 된 상태가 아니기때문에,
@@ -41,11 +43,19 @@ class UploadTweetController: UIViewController {
     }()
     
     // MARK: - Lifecycle
+    init(user: User) {
+        self.user = user
+        super.init(nibName: nil, bundle: nil) 
+    }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         configureUI()
+        
+        print("DEBUG: USer is \(user.username)")
         
     }
     // MARK: - Selectors
@@ -64,9 +74,10 @@ class UploadTweetController: UIViewController {
         view.backgroundColor = .white
         configureNavigationBar()
         
-        view.addSubview(profileImageView)
+        view.addSubview(profileImageView) 
         profileImageView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor,paddingTop: 16, paddingLeft: 16)
         
+        profileImageView.sd_setImage(with: user.profileImageUrl, completed: nil)
                 
     }
     

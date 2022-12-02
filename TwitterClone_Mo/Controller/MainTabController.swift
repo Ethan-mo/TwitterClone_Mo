@@ -81,8 +81,14 @@ class MainTabController: UITabBarController {
     
     // MARK: - Selectors
     @objc func actionButtonTapped(){
-        let nav = UINavigationController(rootViewController: UploadTweetController())
+        // user가 nil이 아닌지 확인
+        guard let user = user else { return }
+        // UploadTweetController에 Data를 전달하기위해 user를 매개변수로 하는 생성자로 초기화
+        let controller = UploadTweetController(user: user)
+        // 새로운 NavigationController를 만들려고하는데, 위에서 생성자 매개변수를 넣어주듯, 새로운 네비게이션 컨트롤러에는 RootVC가 뭔지 설정해주는 것이 필요하다.
+        let nav = UINavigationController(rootViewController: controller)
         nav.modalPresentationStyle = .fullScreen
+        // present는 pushViewController와는 다르게 새로 띄우는거다. 크롬으로 비유하자면, [새탭추가]가 아니라, [새창띄우기]
         present(nav,animated: true,completion: nil)
     }
     // MARK: - Helpers
