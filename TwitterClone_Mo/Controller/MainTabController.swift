@@ -9,6 +9,20 @@ import UIKit
 import Firebase
 
 class MainTabController: UITabBarController {
+    
+    var user: User?{
+        didSet{
+            // 사용자 정보를 정상적으로 불러오면 didSet이 작동한다.
+            print("DEBUG: Did set user in main tab..")
+            /// viewControllers: navigation controller는 여러개의 view controller를 관리하는 container로,
+            /// navigaton stack에 쌓인 view controller들을 viewControllers라고한다.
+            /// 우리는 지금, 현재 VC가 아닌, feedVC에 접근해서, 내부 프로퍼티에 접근하고 싶기 때문에, 이러한 과정을 거친다.
+            guard let nav = viewControllers?[0] as? UINavigationController else { return } // type은 NSArray
+            guard let feed = nav.viewControllers.first as? FeedController else { return }
+            
+            feed.user =  user
+        }
+    }
 
     // MARK: - Properties
     let actionButton: UIButton = {
@@ -32,7 +46,10 @@ class MainTabController: UITabBarController {
     }
     // MARK: - API
     func fetchUser() {
-        UserService.shared.fetchUser()
+        UserService.shared.fetchUser { user in
+            // 이 곳(MainTabController)에 user변수에, Firebase통신으로 가져온 user의 정보를 저장한다.
+            self.user = user
+        }
     }
     
     func authenticateUserAndConfigureUI(){
@@ -64,7 +81,9 @@ class MainTabController: UITabBarController {
     
     // MARK: - Selectors
     @objc func actionButtonTapped(){
-        print(123)
+        let nav = UINavigationController(rootViewController: UploadTweetController())
+        nav.modalPresentationStyle = .fullScreen
+        present(nav,animated: true,completion: nil)
     }
     // MARK: - Helpers
     func configureUI(){
@@ -100,6 +119,7 @@ class MainTabController: UITabBarController {
         nav.navigationBar.scrollEdgeAppearance = nav.navigationBar.standardAppearance
         return nav
     }
+
     func uiTabBarSetting() {
         if #available(iOS 15.0, *){
             let appearance = UITabBarAppearance()
