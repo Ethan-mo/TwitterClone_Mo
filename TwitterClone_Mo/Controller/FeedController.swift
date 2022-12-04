@@ -12,7 +12,11 @@ class FeedController:UIViewController{
     // MARK: - Properties
     var user: User? {
         // user의 profileImage를 불러와야 가능한 부분이기때문에, didSet을 사용
-        didSet{ configureLeftBarButton() }
+        didSet{
+            print("DEBUG: 정상실행됨")
+            configureLeftBarButton()
+            
+        }
     }
     
     // MARK: - Lifecycle
