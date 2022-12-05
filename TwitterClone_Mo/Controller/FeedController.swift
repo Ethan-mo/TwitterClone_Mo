@@ -19,11 +19,19 @@ class FeedController:UIViewController{
         }
     }
     
-    // MARK: - Lifecycle
+    // MARK: - Lifecycle 
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        fetchTweets()
     }
+    // MARK: - API
+    func fetchTweets() {
+        TweetService.shared.fetchTweets { tweets in
+            print("DEBUG: Tweets are \(tweets)")
+        }
+    }
+    
     // MARK: - Helpers
     
     func configureUI(){
