@@ -8,32 +8,33 @@
 import UIKit
 import SDWebImage
 
+protocol TweetCellDelegate: class {
+    func handleProfileImageTapped()
+}
+
 class TweetCell: UICollectionViewCell {
     
     // MARK: - Properties
-    var user: User?{
-        didSet{
-            guard let user = user else { return }
-            profileImageView.sd_setImage(with: user.profileImageUrl, completed: nil)
-            infoLabel.text = user.email
-        }
-    }
+
     var tweet:Tweet?{
-        didSet{
-            guard let tweet = tweet else { return }
-            captionLabel.text = tweet.caption
-            
-            
-        }
+        didSet{ configure() }
     }
     
-    private let profileImageView: UIImageView = {
+    weak var delegate: TweetCellDelegate?
+    
+    // #selector가 있어서 lazy로 해주어야한다.
+    private lazy var profileImageView: UIImageView = {
        let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
         iv.clipsToBounds = true
         iv.setDimensions(width: 48, height: 48)
         iv.layer.cornerRadius = 48 / 2
         iv.backgroundColor = .twitterBlue
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
+        iv.addGestureRecognizer(tap)
+        iv.isUserInteractionEnabled = true
+        
         return iv
     }()
     
@@ -128,6 +129,8 @@ class TweetCell: UICollectionViewCell {
     }
     
     // MARK: - Selectors
+    
+    // Button Tap
     @objc func handleCommentTapped() {
         print("DEBUG: Comment달기")
     }
@@ -141,5 +144,21 @@ class TweetCell: UICollectionViewCell {
         print("DEBUG: 공유하기")
     }
     
+    // ImageView Tap
+    @objc func handleProfileImageTapped() {
+        // 여기를 통해서, 
+        delegate?.handleProfileImageTapped()
+    }
+    
     // MARK: - Helpers
+    func configure() {
+        guard let tweet = tweet else {
+            return
+        }
+        captionLabel.text = tweet.caption
+        
+        let viewModel = TweetViewModel(tweet: tweet)
+        profileImageView.sd_setImage(with: viewModel.profileImageUrl)
+        infoLabel.attributedText = viewModel.userInfoText
+    }
 }

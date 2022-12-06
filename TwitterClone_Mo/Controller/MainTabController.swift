@@ -46,7 +46,8 @@ class MainTabController: UITabBarController {
     }
     // MARK: - API
     func fetchUser() {
-        UserService.shared.fetchUser { user in
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        UserService.shared.fetchUser(uid: uid) { user in
             // 이 곳(MainTabController)에 user변수에, Firebase통신으로 가져온 user의 정보를 저장한다.
             self.user = user
         }
