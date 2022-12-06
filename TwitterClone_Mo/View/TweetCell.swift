@@ -6,10 +6,27 @@
 //
 
 import UIKit
+import SDWebImage
 
 class TweetCell: UICollectionViewCell {
     
     // MARK: - Properties
+    var user: User?{
+        didSet{
+            guard let user = user else { return }
+            profileImageView.sd_setImage(with: user.profileImageUrl, completed: nil)
+            infoLabel.text = user.email
+        }
+    }
+    var tweet:Tweet?{
+        didSet{
+            guard let tweet = tweet else { return }
+            captionLabel.text = tweet.caption
+            
+            
+        }
+    }
+    
     private let profileImageView: UIImageView = {
        let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
@@ -102,6 +119,8 @@ class TweetCell: UICollectionViewCell {
         underlineView.backgroundColor = .systemGroupedBackground
         addSubview(underlineView)
         underlineView.anchor(left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, height: 1)
+        
+        
     }
     
     required init?(coder: NSCoder) {
