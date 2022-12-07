@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A96C436329407A7400D7C283 /* ProfileHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96C436229407A7400D7C283 /* ProfileHeader.swift */; };
 		A9D7D5E42924B2D000697376 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D7D5E32924B2D000697376 /* AppDelegate.swift */; };
 		A9D7D5E62924B2D000697376 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D7D5E52924B2D000697376 /* SceneDelegate.swift */; };
 		A9D7D5EB2924B2D000697376 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9D7D5E92924B2D000697376 /* Main.storyboard */; };
@@ -38,6 +39,7 @@
 
 /* Begin PBXFileReference section */
 		50B653CE4102C73EE61682BC /* Pods-TwitterClone_Mo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwitterClone_Mo.debug.xcconfig"; path = "Target Support Files/Pods-TwitterClone_Mo/Pods-TwitterClone_Mo.debug.xcconfig"; sourceTree = "<group>"; };
+		A96C436229407A7400D7C283 /* ProfileHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHeader.swift; sourceTree = "<group>"; };
 		A9D7D5E02924B2D000697376 /* TwitterClone_Mo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwitterClone_Mo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9D7D5E32924B2D000697376 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A9D7D5E52924B2D000697376 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -185,6 +187,7 @@
 			children = (
 				A9F473312939D54000B4D40C /* CaptionTextView.swift */,
 				A9F47337293DBDC500B4D40C /* TweetCell.swift */,
+				A96C436229407A7400D7C283 /* ProfileHeader.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -331,6 +334,7 @@
 				A9D7D5E42924B2D000697376 /* AppDelegate.swift in Sources */,
 				A9D7D6032924BB7B00697376 /* ExploreController.swift in Sources */,
 				A9F4733C293F383200B4D40C /* ProfileController.swift in Sources */,
+				A96C436329407A7400D7C283 /* ProfileHeader.swift in Sources */,
 				A9F47338293DBDC500B4D40C /* TweetCell.swift in Sources */,
 				A9D7D5E62924B2D000697376 /* SceneDelegate.swift in Sources */,
 				A9F4732A2934BC2800B4D40C /* AuthService.swift in Sources */,
