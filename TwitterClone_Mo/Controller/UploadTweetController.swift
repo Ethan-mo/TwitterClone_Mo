@@ -59,6 +59,7 @@ class UploadTweetController: UIViewController {
         print("DEBUG: USer is \(user.username)")
         
     }
+    
     // MARK: - Selectors
     @objc func handleCancel() {
         dismiss(animated: true, completion: nil)
