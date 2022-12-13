@@ -9,7 +9,7 @@ import UIKit
 
 class ProfileFilterCell: UICollectionViewCell {
     // MARK: - Properties
-    private let titleLabel:UILabel = {
+    var titleLabel:UILabel = {
         let label = UILabel()
         label.textColor = .lightGray
         label.font = UIFont.systemFont(ofSize: 14)
@@ -29,6 +29,7 @@ class ProfileFilterCell: UICollectionViewCell {
         backgroundColor = .white
         addSubview(titleLabel)
         titleLabel.center(inView: self)
+        
     }
     
     required init?(coder: NSCoder) {

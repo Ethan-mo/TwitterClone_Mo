@@ -9,8 +9,14 @@ import UIKit
 
 private let profileFilterCellIdentifire = "ProfileFiterCell"
 
+protocol ProfileFilterViewDelegate: class {
+    func filterView(_ view: ProfileFilterView, diSelect indexPath: IndexPath)
+}
+
 class ProfileFilterView: UIView {
     // MARK: - Properties
+    weak var delegate: ProfileFilterViewDelegate?
+    
     lazy var collectionView: UICollectionView = {
        let layout = UICollectionViewFlowLayout()
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -22,6 +28,7 @@ class ProfileFilterView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         collectionView.register(ProfileFilterCell.self, forCellWithReuseIdentifier: profileFilterCellIdentifire)
+        addSubview(collectionView)
         collectionView.addConstraintsToFillView(self)
     }
     required init?(coder: NSCoder) {
@@ -30,9 +37,8 @@ class ProfileFilterView: UIView {
 }
 // MARK: - UICollectionViewDelegate
 extension ProfileFilterView: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: profileFilterCellIdentifire, for: indexPath) as! ProfileFilterCell
-        return cell
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        delegate?.filterView(self, diSelect: indexPath)
     }
 
 }
@@ -40,6 +46,16 @@ extension ProfileFilterView: UICollectionViewDelegate {
 extension ProfileFilterView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 3
+    }
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: profileFilterCellIdentifire, for: indexPath) as! ProfileFilterCell
+        var profileFilterText = ["Tweets","Tweets & Replies","Likes"]
+        cell.titleLabel.text = profileFilterText[indexPath.row]
+        if indexPath.row == 0{
+            cell.isSelected = true
+            collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .init())
+        }
+        return cell
     }
 }
 // MARK: - UICollectionViewDelegateFlowLayout

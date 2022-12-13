@@ -71,17 +71,22 @@ class ProfileHeader: UICollectionReusableView {
         label.text = "이 편지는 영국으로부터 시작되어, 하루에 3명에게 같은 내용의 편지를 전달해야합니다. 그렇지 않을 경우, 감당할 수 없는 행복한 일들이 가득할껍니다."
         return label
     }()
-    
-    private let divLine: UIView = {
-        let view = UIView()
-        view.backgroundColor = .systemGroupedBackground
+    private let divlineView: UIView = {
+       let view = UIView()
+        view.backgroundColor = .lightGray
         return view
     }()
     
+    private let underlineView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .twitterBlue
+        return view
+    }()
     // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        filterBar.delegate = self
         // containerView에 대한 레이아웃 설정
         addSubview(containerView)
         containerView.anchor(top:topAnchor, left: leftAnchor, right: rightAnchor, height: 108)
@@ -109,7 +114,11 @@ class ProfileHeader: UICollectionReusableView {
         //filterBar.delegate = self
         filterBar.anchor(left: leftAnchor,bottom: bottomAnchor, right: rightAnchor, height: 50)
         
+        addSubview(divlineView)
+        divlineView.anchor(left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, height: 1)
         
+        addSubview(underlineView)
+        underlineView.anchor(left: leftAnchor, bottom: bottomAnchor, width: frame.width / 3, height: 2)
         
     }
     
@@ -122,5 +131,14 @@ class ProfileHeader: UICollectionReusableView {
     }
     @objc func handleEditProfileFollow() {
         
+    }
+}
+extension ProfileHeader: ProfileFilterViewDelegate {
+    func filterView(_ view: ProfileFilterView, diSelect indexPath: IndexPath) {
+        guard let cell = view.collectionView.cellForItem(at: indexPath) as? ProfileFilterCell else { return }
+        let xPosition = cell.frame.origin.x
+        UIView.animate(withDuration: 0.3) {
+            self.underlineView.frame.origin.x = xPosition
+        }
     }
 }
