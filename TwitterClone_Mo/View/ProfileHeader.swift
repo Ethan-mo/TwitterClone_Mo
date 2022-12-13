@@ -118,7 +118,8 @@ class ProfileHeader: UICollectionReusableView {
         divlineView.anchor(left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, height: 1)
         
         addSubview(underlineView)
-        underlineView.anchor(left: leftAnchor, bottom: bottomAnchor, width: frame.width / 3, height: 2)
+        let count = CGFloat(ProfileFilterOptions.allCases.count)
+        underlineView.anchor(left: leftAnchor, bottom: bottomAnchor, width: frame.width / count, height: 2)
         
     }
     

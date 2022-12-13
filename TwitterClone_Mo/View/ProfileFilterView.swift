@@ -28,6 +28,7 @@ class ProfileFilterView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         collectionView.register(ProfileFilterCell.self, forCellWithReuseIdentifier: profileFilterCellIdentifire)
+        let selectedIndexPath = IndexPath(row: 0, section: 0)
         addSubview(collectionView)
         collectionView.addConstraintsToFillView(self)
     }
@@ -45,12 +46,13 @@ extension ProfileFilterView: UICollectionViewDelegate {
 // MARK: - UICollectionViewDataSource
 extension ProfileFilterView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        return ProfileFilterOptions.allCases.count
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: profileFilterCellIdentifire, for: indexPath) as! ProfileFilterCell
-        var profileFilterText = ["Tweets","Tweets & Replies","Likes"]
-        cell.titleLabel.text = profileFilterText[indexPath.row]
+        let option = ProfileFilterOptions(rawValue: indexPath.row)
+        cell.option = option
+        
         if indexPath.row == 0{
             cell.isSelected = true
             collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .init())
@@ -61,7 +63,8 @@ extension ProfileFilterView: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegateFlowLayout
 extension ProfileFilterView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: frame.width / 3, height: frame.height)
+        let count = CGFloat(ProfileFilterOptions.allCases.count)
+        return CGSize(width: frame.width / count, height: frame.height)
     }
     // 각 셀 사이의 간격을 의미
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
