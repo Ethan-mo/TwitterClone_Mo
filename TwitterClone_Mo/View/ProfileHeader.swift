@@ -8,9 +8,15 @@
 import UIKit
 import Firebase
 
+protocol ProfileHeaderDelegate : class {
+    func handleDismissal()
+}
+
 class ProfileHeader: UICollectionReusableView {
-    
+
     // MARK: - Properties
+    weak var delegate: ProfileHeaderDelegate?
+    
     var user: User? {
         didSet{
             configure()
@@ -166,7 +172,7 @@ class ProfileHeader: UICollectionReusableView {
     }
     // MARK: - Selector
     @objc func handleDismissal() {
-        
+        delegate?.handleDismissal()
     }
     @objc func handleEditProfileFollow() {
         
