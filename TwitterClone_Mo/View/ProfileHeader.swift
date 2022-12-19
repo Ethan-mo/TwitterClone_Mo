@@ -189,10 +189,12 @@ class ProfileHeader: UICollectionReusableView {
         let viewModel = ProfileHeaderViewModel(user: user)
         followingLabel.attributedText = viewModel.following
         followersLabel.attributedText = viewModel.followers
-        
-        profileImageView.sd_setImage(with: user.profileImageUrl)
-        
         editProfileFollowButton.setTitle(viewModel.actionButtonTitle, for: .normal)
+        
+        //User에서 기본정보 불러오기.
+        profileImageView.sd_setImage(with: user.profileImageUrl)
+        fullnameLabel.text = user.fullname
+        usernameLabel.text = viewModel.userNameText
     }
 }
 extension ProfileHeader: ProfileFilterViewDelegate {
