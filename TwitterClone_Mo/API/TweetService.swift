@@ -59,6 +59,8 @@ struct TweetService {
             }
         }
     }
+    
+    
 }
 // Firebase 관련 메서드 정리
 /// func observe() : 호출

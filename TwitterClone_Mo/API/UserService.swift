@@ -9,7 +9,7 @@ import Firebase
 struct UserService {
     static let shared = UserService()
     
-    // 굳이 매개변수로 completion을 해야하나? 그냥 return으로 User값을 주면, 될텐데
+    /// 단 한명의 user의 정보를 호출할 때 사용하는 API
     func fetchUser(uid: String, completion:@escaping(User) -> Void) {
         
         REF_USERS.child(uid).observeSingleEvent(of: .value) { snapshot in
@@ -17,10 +17,19 @@ struct UserService {
             guard let dictionaty = snapshot.value as? [String:AnyObject] else { return }
             
             let user = User(uid: uid, dictionary: dictionaty)
-            
-            print("DEBUG: Username is \(user.username)")
-            print("DEBUG: Fullname is \(user.fullname)")
             completion(user)
         }
-    } 
+    }
+    /// DB에 있는 모든 user의 정보를 호출할 때 사용하는 API
+    func fetchUsers(completion: @escaping([User]) -> Void) {
+        var users = [User]()
+        REF_USERS.observe(.childAdded) { snapshot in
+            let userID = snapshot.key
+            guard let dictionary = snapshot.value as? [String:AnyObject] else { return }
+            
+            let user = User(uid: userID, dictionary: dictionary)
+            users.append(user)
+            completion(users)
+        }
+    }
 }
