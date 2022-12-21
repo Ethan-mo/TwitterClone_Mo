@@ -6,6 +6,8 @@
 //
 
 import Firebase
+
+typealias DatabaseCompletion = ((Error?, DatabaseReference) -> Void)
 struct UserService {
     static let shared = UserService()
     
@@ -30,6 +32,29 @@ struct UserService {
             let user = User(uid: userID, dictionary: dictionary)
             users.append(user)
             completion(users)
+        }
+    }
+    // 내가 추가로 다른사람을 팔로우
+    func followUser(uid: String, completion: @escaping DatabaseCompletion) {
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        REF_USER_FOLLOWING.child(currentUid).updateChildValues([uid: 1]) { err, ref in
+            REF_USER_FOLLOWERS.child(uid).updateChildValues([currentUid: 1], withCompletionBlock: completion)
+        }
+    }
+    // 기존 팔로워를 끊는 것
+    func unfollowUser(uid: String, completion: @escaping DatabaseCompletion ) {
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        
+        REF_USER_FOLLOWING.child(currentUid).child(uid).removeValue { err,ref in
+            REF_USER_FOLLOWERS.child(uid).child(currentUid).removeValue(completionBlock: completion)
+        }
+    }
+    func checkIfUserIsFollowed(uid: String, completion:@escaping (Bool) -> Void) {
+        // user-followers를 호출하고, 이미 있는 uid라면, user의 isFollowed의 값을 true로 설정
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        REF_USER_FOLLOWING.child(currentUid).child(uid).observeSingleEvent(of: .value) { snapshot in
+            completion(snapshot.exists())
+            
         }
     }
 }
