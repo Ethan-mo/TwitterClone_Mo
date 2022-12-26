@@ -15,7 +15,8 @@ struct User {
     let username: String
     var profileImageUrl: URL?
     let uid: String
-    var isFollowed = false 
+    var isFollowed = false
+    var stats: UserRelationStats? // 사용자 정보를 불러온 후에, 값을 초기화 해줄 수 있기 때문에, 옵셔널이다.
     
     var isCurrentUser: Bool { return Auth.auth().currentUser?.uid == uid} 
     
@@ -30,4 +31,9 @@ struct User {
             self.profileImageUrl = url
         }
     }
+}
+
+struct UserRelationStats {
+    var followers: Int
+    var following: Int
 }

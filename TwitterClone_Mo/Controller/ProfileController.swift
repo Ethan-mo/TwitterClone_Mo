@@ -35,6 +35,7 @@ class ProfileController: UICollectionViewController {
         configureCollectionView()
         fetchTweets()
         checkIfUserIsFollowed()
+        fetchUserStats()
         
         print("DEBUG: User is \(user.username)")
     }
@@ -55,7 +56,12 @@ class ProfileController: UICollectionViewController {
             self.collectionView.reloadData()
         }
     }
-    
+    func fetchUserStats() {
+        UserService.shared.fetchUserState(uid: user.uid) { stats in
+            self.user.stats = stats
+            self.collectionView.reloadData()
+        }
+    }
     // MARK: - Helpers
     func configureCollectionView() {
 
@@ -119,12 +125,12 @@ extension ProfileController: ProfileHeaderDelegate {
         if user.isFollowed {
             UserService.shared.unfollowUser(uid: user.uid) { err, ref in
                 self.user.isFollowed = false
-                self.collectionView.reloadData()
+                self.fetchUserStats()
             }
         }else{
             UserService.shared.followUser(uid: user.uid) { err, ref in
                 self.user.isFollowed = true
-                self.collectionView.reloadData()
+                self.fetchUserStats()
             }
         }
     }

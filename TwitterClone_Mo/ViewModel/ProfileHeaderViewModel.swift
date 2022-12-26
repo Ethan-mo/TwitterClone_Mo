@@ -24,10 +24,10 @@ struct ProfileHeaderViewModel {
     let userNameText: String
     
     var following:NSAttributedString {
-        return attributedText(withValue: 2, text: "following")
+        return attributedText(withValue: user.stats?.following ?? 0, text: "following")
     }
     var followers:NSAttributedString {
-        return attributedText(withValue: 0, text: "followers")
+        return attributedText(withValue: user.stats?.followers ?? 0, text: "followers")
     }
     var actionButtonTitle: String {
         if user.isCurrentUser {

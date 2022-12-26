@@ -198,6 +198,7 @@ class ProfileHeader: UICollectionReusableView {
         profileImageView.sd_setImage(with: user.profileImageUrl)
         fullnameLabel.text = user.fullname
         usernameLabel.text = viewModel.userNameText
+        
     }
 }
 extension ProfileHeader: ProfileFilterViewDelegate {
