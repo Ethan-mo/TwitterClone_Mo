@@ -52,6 +52,7 @@ class ProfileController: UICollectionViewController {
     func checkIfUserIsFollowed() {
         UserService.shared.checkIfUserIsFollowed(uid: user.uid) { isFollowed in
             self.user.isFollowed = isFollowed
+            self.collectionView.reloadData()
         }
     }
     
@@ -107,15 +108,23 @@ extension ProfileController: ProfileHeaderDelegate {
         navigationController?.popViewController(animated: true)
     }
     func handleEditProfileFollow(_ header: ProfileHeader) {
+        
+        // 만약 현재 프로필이 내 계정이라면
+        if user.isCurrentUser {
+            // 향후에, 내 프로필을 수정할 수 있는 페이지를 여기에 설정한다.
+            print("DEBUG: Show edit profile controller..")
+            return
+        }
+        // 선택한 계정이 팔로우 되어있을 경우, 이 버튼을 눌렀다는 것은, 이미 팔로우가 되어있는 상태에서, 한 번 더 누른 것이므로, 언팔로우이다.
         if user.isFollowed {
             UserService.shared.unfollowUser(uid: user.uid) { err, ref in
                 self.user.isFollowed = false
-                header.editProfileFollowButton.setTitle("Follow", for: .normal)
+                self.collectionView.reloadData()
             }
         }else{
             UserService.shared.followUser(uid: user.uid) { err, ref in
                 self.user.isFollowed = true
-                header.editProfileFollowButton.setTitle("Following", for: .normal)
+                self.collectionView.reloadData()
             }
         }
     }
