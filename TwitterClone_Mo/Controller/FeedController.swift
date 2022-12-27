@@ -84,6 +84,11 @@ extension FeedController {
         cell.delegate = self
         return cell
     }
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let controller = TweetController(tweet:tweets[indexPath.row])
+        print("DEBUG: 피드에 있는 CEll을 선택하였습니다.")
+        navigationController?.pushViewController(controller, animated: true)
+    }
 
 }
 
