@@ -73,6 +73,7 @@ class MainTabController: UITabBarController {
     
     func logUserOut(){
         do{
+            // 1) 로그아웃
             try Auth.auth().signOut()
             print("DEBUG: logout에 성공하였습니다.")
         }catch let error{

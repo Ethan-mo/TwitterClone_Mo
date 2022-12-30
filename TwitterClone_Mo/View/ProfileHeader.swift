@@ -98,9 +98,7 @@ class ProfileHeader: UICollectionReusableView {
     }()
     
     private let followersLabel: UILabel = {
-        let label = UILabel()
-        label.text = "0 Following"
-        
+        let label = UILabel()        
         let followTap = UITapGestureRecognizer(target: self, action: #selector(handleFollowersTapped))
         label.isUserInteractionEnabled = true
         label.addGestureRecognizer(followTap)
@@ -109,8 +107,6 @@ class ProfileHeader: UICollectionReusableView {
     
     private let followingLabel: UILabel = {
         let label = UILabel()
-        label.text = "2 Followers"
-        
         let followTap = UITapGestureRecognizer(target: self, action: #selector(handleFollowingTapped))
         label.isUserInteractionEnabled = true
         label.addGestureRecognizer(followTap)
