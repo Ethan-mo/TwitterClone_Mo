@@ -42,7 +42,7 @@ class TweetHeader: UICollectionReusableView {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 22)
         label.numberOfLines = 0
-        label.text = "이 편지는 영국으로부터 시작되어, 하루에 3명에게 같은 내용의 편지를 전달해야합니다. 그렇지 않을 경우, 감당할 수 없는 행복한 일들이 가득할껍니다."
+        label.text = "이 편지는 영국으로부터 시작되어...."
         return label
     }()
     
@@ -105,7 +105,26 @@ class TweetHeader: UICollectionReusableView {
         
         return view
     }()
-    
+    private let commentButton: UIButton {
+        let button = createButton(withImage: "comment")
+        button.addTarget(self, action: #selector(handleCommentTapped), for: .touchUpInside)
+        return button
+    }()
+    private let retweetButton: UIButton {
+        let button = createButton(withImage: "retweet")
+        button.addTarget(self, action: #selector(handleRetweetTapped), for: .touchUpInside)
+        return button
+    }()
+    private let likeButton: UIButton {
+        let button = createButton(withImage: "like")
+        button.addTarget(self, action: #selector(handleLikeTapped), for: .touchUpInside)
+        return button
+    }()
+    private let shareButton: UIButton {
+        let button = createButton(withImage: "share")
+        button.addTarget(self, action: #selector(handleShareTapped), for: .touchUpInside)
+        return button
+    }()
     // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame) 
@@ -132,6 +151,14 @@ class TweetHeader: UICollectionReusableView {
         
         addSubview(statsView)
         statsView.anchor(top: dateLabel.bottomAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 20, height: 40)
+        
+        let actionStack = UIStackView(arrangedSubviews: [commentButton, retweetButton, likeButton, shareButton])
+        actionStack.spacing = 72
+        
+        addSubview(actionStack)
+        actionStack.centerX(inView: self)
+        actionStack.anchor(bottom: bottomAnchor, paddingBottom: 12)
+        
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -150,7 +177,11 @@ class TweetHeader: UICollectionReusableView {
         print("DEBUG: Likes Label Tapped")
     }
     // MARK: - Helpers
-    func configure() {
-        
+    func createButton(withImage image: UIImage) -> UIButton {
+        let button = UIButton()
+        button.setImage(UIImage(named: image), for: .normal)
+        button.tintColor = .darkGray
+        button.setDimensions(width: 20, height: 20)
+        return button
     }
 }
