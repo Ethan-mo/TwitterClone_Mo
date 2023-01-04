@@ -32,6 +32,15 @@ class UploadTweetController: UIViewController {
         
         return button
     }()
+    // replyLabel은 UploadTweetController에서, reply모드일떄만 활성화하는 Label이다.
+    private lazy var replyLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = .lightGray
+        label.text = "replying to @spiderman"
+        label.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+        return label
+    }()
     
     private let profileImageView: UIImageView = {
        let iv = UIImageView()
@@ -92,16 +101,31 @@ class UploadTweetController: UIViewController {
         view.backgroundColor = .white
         configureNavigationBar()
         
-        let stack = UIStackView(arrangedSubviews: [profileImageView,captionTextView])
-        stack.axis = .horizontal
+        // profileImageView와 captionTextView를 묶어서 horizontal형식으로 묶인 스택뷰
+        let imageCaptionStack = UIStackView(arrangedSubviews: [profileImageView,captionTextView])
+        imageCaptionStack.axis = .horizontal
+        imageCaptionStack.spacing = 12
+        imageCaptionStack.alignment = .leading
+        
+        // 위에서 정의된 스택뷰와 reply모드에서만 사용한다는 ReplyLabel을 Vertical형태로 스택을 만든다.
+        let stack = UIStackView(arrangedSubviews: [replyLabel, imageCaptionStack])
+        stack.axis = .vertical
         stack.spacing = 12
-        stack.alignment = .leading
         
         view.addSubview(stack)
         stack.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor ,right: view.rightAnchor  ,paddingTop: 16, paddingLeft: 16, paddingRight: 16)
         
         profileImageView.sd_setImage(with: user.profileImageUrl, completed: nil)
-                
+        
+        // actionButton은 현재 Controller에서 사용하는 완료 버튼이다.
+        /// viewModel에서는 각 모드(.Tweet | .Reply)에 따라서 actionButtonTitle, placeholderLabel, shouldShowReplyLabel, replyText 값이 각 모드에 맞게 초기화 되어있다.
+        actionButton.setTitle(viewModel.actionButtonTitle, for: .normal)
+        captionTextView.placeholderLabel.text = viewModel.placeholderText
+        
+        // 여기서 중요한 것은, stack의 요소로 사용되고있는 replyLabel이 Hidden상태가 되면, 다른 요소값들이 그 자리를 채워준다.
+        replyLabel.isHidden = !viewModel.shouldShowReplyLabel
+        guard let replyText = viewModel.replyText else { return }
+        replyLabel.text = replyText
     }
     
     func configureNavigationBar() {
