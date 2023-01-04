@@ -54,5 +54,25 @@ struct TweetViewModel {
         attributedTitle.append(NSAttributedString(string: " \(text)", attributes: [.font: UIFont.systemFont(ofSize: 14),.foregroundColor: UIColor.lightGray]))
         return attributedTitle
     }
+    
+    /// func size()
+    /// - Parameter width: 특정 폭
+    /// - Returns: 특정 Text로 채워진 label의 size를 Value화 시켜 return한다.
+    func size(forWidth width: CGFloat) -> CGSize {
+        // 1. 임시 label생성하기
+        let measurementLabel = UILabel()
+        // 2. 임시 label.text에 tweet.caption값으로 채우기
+        measurementLabel.text = tweet.caption
+        // 3. 채운 값이 한 줄로 뭉쳐지는 것을 방지하기 위해, 설정값을 변경한다.
+        measurementLabel.numberOfLines = 0
+        // 4. 개별 문자 단위로 줄바꿈하는 특수한 설정이다. 칸이 꽉차서 넘어가야하는 경우, 단어를 감지해서, 단어와 함께 넘어가도록 설정할 수 있다.
+        measurementLabel.lineBreakMode = .byWordWrapping
+        // 5. translates~~는 UIView의 인스턴스 프로퍼티로, View의 autoresizing mask가 Auto Layout constraints으로 변환되는 여부를 의미한다. 보통 false로 설정 시, 직접 설정하는 모드가 된다.
+        measurementLabel.translatesAutoresizingMaskIntoConstraints = false
+        // 6. 위 5번에서 설정한 값으로 인해, View의 constraints를 수동으로 변경할 수 있게되었고, measurementLabel의 widthAnchor의 constraint를 Parameter에서 가져온 값으로 설정하였다.
+        measurementLabel.widthAnchor.constraint(equalToConstant: width).isActive = true
+        // 7. 위 6번까지의 과정으로, 특정 caption(내용)의 text에 대해, 내가 기입한 width를 갖는 label의 height값을 return하게 된다.
+        return measurementLabel.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+    }
 }
 

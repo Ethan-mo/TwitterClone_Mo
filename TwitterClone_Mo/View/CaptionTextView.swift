@@ -16,7 +16,6 @@ class CaptionTextView: UITextView {
         label.font = UIFont.systemFont(ofSize: 16)
         label.textColor = .darkGray
         label.text = "무슨 일이야?"
-        label.numberOfLines = 0
         return label
     }()
     
@@ -28,7 +27,7 @@ class CaptionTextView: UITextView {
         backgroundColor = .white
         font = UIFont.systemFont(ofSize: 16)
         isScrollEnabled = false
-        heightAnchor.constraint(equalToConstant: 300).isActive = true
+        heightAnchor.constraint(equalToConstant: 200).isActive = true
         
          addSubview(placeholderLabel)
         placeholderLabel.anchor(top: topAnchor, left: leftAnchor, paddingTop: 8, paddingLeft: 4)

@@ -155,7 +155,7 @@ class TweetHeader: UICollectionReusableView {
         dateLabel.anchor(top: captionLabel.bottomAnchor, left: stack.leftAnchor, paddingTop: 20)
         
         addSubview(statsView)
-        statsView.anchor(top: dateLabel.bottomAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 20, height: 40)
+        statsView.anchor(top: dateLabel.bottomAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 12, height: 40)
         
         let buttonStack = UIStackView(arrangedSubviews: [commentButton,retweetButton,likeButton,shareButton])
         buttonStack.axis = .horizontal
