@@ -10,6 +10,7 @@ import SDWebImage
 
 protocol TweetCellDelegate: class {
     func handleProfileImageTapped(_ cell: TweetCell)
+    func handleReplyTapped(_ cell: TweetCell)
 }
 
 class TweetCell: UICollectionViewCell {
@@ -132,7 +133,7 @@ class TweetCell: UICollectionViewCell {
     
     // Button Tap
     @objc func handleCommentTapped() {
-        print("DEBUG: Comment달기")
+        delegate?.handleReplyTapped(self)
     }
     @objc func handleRetweetTapped() {
         print("DEBUG: 리트윗하기")

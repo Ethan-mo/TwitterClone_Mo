@@ -11,6 +11,8 @@ import SDWebImage
 class UploadTweetController: UIViewController {
     // MARK: - Properties
     var user : User
+    private let config: UploadTweetConfiguartion
+    private lazy var viewModel = UploadTweetViewModel(config: config)
     
     // lazy로 처리해줘야, actionButton이 호출될 때 초기화를한다.
     /// 아래에서는, addTarget의 첫번째 매개변수인 self가 의미하는 viewController가 아직 초기화 된 상태가 아니기때문에,
@@ -44,8 +46,9 @@ class UploadTweetController: UIViewController {
     private let captionTextView = CaptionTextView()
     
     // MARK: - Lifecycle
-    init(user: User) {
+    init(user: User, config: UploadTweetConfiguartion) {
         self.user = user
+        self.config = config
         super.init(nibName: nil, bundle: nil) 
     }
     
@@ -56,7 +59,12 @@ class UploadTweetController: UIViewController {
         super.viewDidLoad()
         configureUI()
         
-        print("DEBUG: USer is \(user.username)")
+        switch config {
+        case .tweet:
+            print("DEBUG: Config is Tweet")
+        case .reply(let tweet):
+            print("DEBUG: Replying to \(tweet.caption)")
+        }
         
     }
     

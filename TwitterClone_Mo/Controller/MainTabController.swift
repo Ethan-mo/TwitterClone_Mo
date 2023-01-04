@@ -86,7 +86,8 @@ class MainTabController: UITabBarController {
         // user가 nil이 아닌지 확인
         guard let user = user else { return }
         // UploadTweetController에 Data를 전달하기위해 user를 매개변수로 하는 생성자로 초기화
-        let controller = UploadTweetController(user: user)
+        /// UploadTweetController에 접근하는 모든 경우에, 앞으로 config라는 파라미터를 추가로 입력해야한다. 이 경우, 단순히 Tweet을 추가할때 사용하므로, .tweet
+        let controller = UploadTweetController(user: user,config: .tweet)
         // 새로운 NavigationController를 만들려고하는데, 위에서 생성자 매개변수를 넣어주듯, 새로운 네비게이션 컨트롤러에는 RootVC가 뭔지 설정해주는 것이 필요하다.
         let nav = UINavigationController(rootViewController: controller)
         nav.modalPresentationStyle = .fullScreen
