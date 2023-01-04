@@ -105,26 +105,27 @@ class TweetHeader: UICollectionReusableView {
         
         return view
     }()
-    private let commentButton: UIButton {
-        let button = createButton(withImage: "comment")
+    private lazy var commentButton: UIButton = {
+        let button = createButton(withImageName: "comment")
         button.addTarget(self, action: #selector(handleCommentTapped), for: .touchUpInside)
         return button
     }()
-    private let retweetButton: UIButton {
-        let button = createButton(withImage: "retweet")
+    private lazy var retweetButton: UIButton = {
+        let button = createButton(withImageName: "retweet")
         button.addTarget(self, action: #selector(handleRetweetTapped), for: .touchUpInside)
         return button
     }()
-    private let likeButton: UIButton {
-        let button = createButton(withImage: "like")
+    private lazy var likeButton: UIButton = {
+        let button = createButton(withImageName: "like")
         button.addTarget(self, action: #selector(handleLikeTapped), for: .touchUpInside)
         return button
     }()
-    private let shareButton: UIButton {
-        let button = createButton(withImage: "share")
+    private lazy var shareButton: UIButton = {
+        let button = createButton(withImageName: "share")
         button.addTarget(self, action: #selector(handleShareTapped), for: .touchUpInside)
         return button
     }()
+
     // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame) 
@@ -152,13 +153,14 @@ class TweetHeader: UICollectionReusableView {
         addSubview(statsView)
         statsView.anchor(top: dateLabel.bottomAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 20, height: 40)
         
-        let actionStack = UIStackView(arrangedSubviews: [commentButton, retweetButton, likeButton, shareButton])
-        actionStack.spacing = 72
+        let buttonStack = UIStackView(arrangedSubviews: [commentButton,retweetButton,likeButton,shareButton])
+        buttonStack.axis = .horizontal
+        buttonStack.spacing = 72
         
-        addSubview(actionStack)
-        actionStack.centerX(inView: self)
-        actionStack.anchor(bottom: bottomAnchor, paddingBottom: 12)
-        
+        addSubview(buttonStack)
+        buttonStack.centerX(inView: self)
+        buttonStack.anchor(bottom: bottomAnchor, paddingBottom: 12)
+
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -167,19 +169,32 @@ class TweetHeader: UICollectionReusableView {
     @objc func handleProfileImageTapped() {
         
     }
+    @objc func handleretweetsTapped() {
+        print("DEBUG: Retweets Button Tapped")
+    }
+    @objc func handlelikesTapped() {
+        print("DEBUG: Likes Button Tapped")
+    }
+    
     @objc func showActionSheet() {
         print("DEBUG: Push Option")
     }
-    @objc func handleretweetsTapped() {
+    @objc func handleCommentTapped() {
+        print("DEBUG: Comment Label Tapped")
+    }
+    @objc func handleRetweetTapped() {
         print("DEBUG: Retweets Label Tapped")
     }
-    @objc func handlelikesTapped() {
+    @objc func handleLikeTapped() {
         print("DEBUG: Likes Label Tapped")
     }
+    @objc func handleShareTapped() {
+        print("DEBUG: Share Label Tapped")
+    }
     // MARK: - Helpers
-    func createButton(withImage image: UIImage) -> UIButton {
-        let button = UIButton()
-        button.setImage(UIImage(named: image), for: .normal)
+    func createButton(withImageName imageName: String) -> UIButton {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(named: imageName), for: .normal)
         button.tintColor = .darkGray
         button.setDimensions(width: 20, height: 20)
         return button
