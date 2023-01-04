@@ -9,6 +9,12 @@ import UIKit
 
 class TweetHeader: UICollectionReusableView {
     // MARK: - Properties
+    var tweet: Tweet? {
+        didSet{
+            configure()
+        }
+    }
+    
     private lazy var profileImageView: UIImageView = {
        let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
@@ -67,7 +73,6 @@ class TweetHeader: UICollectionReusableView {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
         let followTap = UITapGestureRecognizer(target: self, action: #selector(handleretweetsTapped))
-        label.text = "0 Retweets"
         label.isUserInteractionEnabled = true
         label.addGestureRecognizer(followTap)
         return label
@@ -77,7 +82,6 @@ class TweetHeader: UICollectionReusableView {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
         let followTap = UITapGestureRecognizer(target: self, action: #selector(handlelikesTapped))
-        label.text = "0 Likes"
         label.isUserInteractionEnabled = true
         label.addGestureRecognizer(followTap)
         return label
@@ -192,6 +196,19 @@ class TweetHeader: UICollectionReusableView {
         print("DEBUG: Share Label Tapped")
     }
     // MARK: - Helpers
+    func configure() {
+        guard let tweet = tweet else {return}
+        let viewModel = TweetViewModel(tweet: tweet)
+        
+        captionLabel.text = tweet.caption
+        fullnameLabel.text = tweet.user.fullname
+        usernameLabel.text = viewModel.usernameText
+        profileImageView.sd_setImage(with: viewModel.profileImageUrl)
+        dateLabel.text = viewModel.headerImtestamp
+        retweetsLabel.attributedText = viewModel.retweetAttributedString
+        likesLabel.attributedText = viewModel.likesAttributedString
+    }
+    
     func createButton(withImageName imageName: String) -> UIButton {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: imageName), for: .normal)

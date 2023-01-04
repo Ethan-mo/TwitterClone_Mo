@@ -43,6 +43,7 @@ class TweetController: UICollectionViewController {
 extension TweetController {
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerIdentifire, for: indexPath) as! TweetHeader
+        header.tweet = tweet
         return header
     }
 }
