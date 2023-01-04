@@ -116,6 +116,5 @@ extension FeedController: TweetCellDelegate {
         let controller = ProfileController(user: user)
         self.navigationController?.pushViewController(controller, animated: true)
     }
-    
-     
+
 }

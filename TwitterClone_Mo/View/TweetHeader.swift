@@ -163,7 +163,7 @@ class TweetHeader: UICollectionReusableView {
         
         addSubview(buttonStack)
         buttonStack.centerX(inView: self)
-        buttonStack.anchor(bottom: bottomAnchor, paddingBottom: 12)
+        buttonStack.anchor(top:statsView.bottomAnchor, paddingTop: 16)
 
     }
     required init?(coder: NSCoder) {
