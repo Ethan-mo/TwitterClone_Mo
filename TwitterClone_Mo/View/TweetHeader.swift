@@ -19,7 +19,7 @@ class TweetHeader: UICollectionReusableView {
         }
     }
     
-    week var delegate: TweetHeaderDelegate?
+    weak var delegate: TweetHeaderDelegate?
     
     private lazy var profileImageView: UIImageView = {
        let iv = UIImageView()
