@@ -26,6 +26,27 @@ class ActionSheetLauncher: NSObject {
         return view
     }()
     
+    private lazy var cancleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
+        button.setTitle("취 소", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = .systemGroupedBackground
+        button.addTarget(self, action: #selector(handleDismissal), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var footerView: UIView = {
+        let view = UIView()
+        
+        view.addSubview(cancleButton)
+        cancleButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        cancleButton.anchor(left: view.leftAnchor, right: view.rightAnchor, paddingLeft: 12, paddingRight: 12)
+        cancleButton.centerY(inView: view)
+        cancleButton.layer.cornerRadius = 50 / 2
+        return view
+    }()
+    
     // MARK: - 생명주기
     init(user: User) {
         self.user = user
@@ -40,17 +61,19 @@ class ActionSheetLauncher: NSObject {
         blackView.frame = window.frame
         
         window.addSubview(tableView)
+        let height = CGFloat(3 * 60) + 100
+        
         // 이렇게만 설정하면, 화면에 없는 아래부분에 tableView가 생성된다.
-        tableView.frame = CGRect(x: 0, y: window.frame.height, width: window.frame.width, height: 300)
+        tableView.frame = CGRect(x: 0, y: window.frame.height, width: window.frame.width, height: height)
         
         UIView.animate(withDuration: 0.5) {
             self.blackView.alpha = 1
             // 아래 내려가있는 tableView의 y좌표를 변경한다.
-            self.tableView.frame.origin.y -= 300
+            self.tableView.frame.origin.y -= height
         }
     }
     func configureTableView() {
-        tableView.backgroundColor = .red
+        tableView.backgroundColor = .white
         tableView.delegate = self
         tableView.dataSource = self
         // 테이블뷰안에 있는 각 cell의 높이
@@ -62,7 +85,7 @@ class ActionSheetLauncher: NSObject {
         // 스크롤이 되는지 여부
         tableView.isScrollEnabled = false
         
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
+        tableView.register(ActionSheetCell.self, forCellReuseIdentifier: reuseIdentifier)
     }
     // MARK: - Selector
     @objc func handleDismissal() {
@@ -77,13 +100,18 @@ extension ActionSheetLauncher: UITableViewDataSource {
         return 3
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! ActionSheetCell
         
         return cell
     }
 }
 
 extension ActionSheetLauncher: UITableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return footerView
+    }
+    func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
+        return 60
+    }
 }
 
