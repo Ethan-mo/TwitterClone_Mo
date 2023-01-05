@@ -16,6 +16,16 @@ class ActionSheetLauncher: NSObject {
     private let tableView = UITableView()
     private var window: UIWindow?
     
+    private lazy var blackView: UIView = {
+       let view = UIView()
+        view.alpha = 0
+        view.backgroundColor = UIColor(white: 0, alpha: 0.5)
+        let tap = UIGestureRecognizer(target: self, action: #selector(handleDismissal))
+        view.addGestureRecognizer(tap)
+        
+        return view
+    }()
+    
     // MARK: - 생명주기
     init(user: User) {
         self.user = user
@@ -26,9 +36,18 @@ class ActionSheetLauncher: NSObject {
     func show() {
         guard let window = UIApplication.shared.windows.first(where: {$0.isKeyWindow}) else { return }
         self.window = window
+        window.addSubview(blackView)
+        blackView.frame = window.frame
         
         window.addSubview(tableView)
-        tableView.frame = CGRect(x: 0, y: window.frame.height - 300, width: window.frame.width, height: 300)
+        // 이렇게만 설정하면, 화면에 없는 아래부분에 tableView가 생성된다.
+        tableView.frame = CGRect(x: 0, y: window.frame.height, width: window.frame.width, height: 300)
+        
+        UIView.animate(withDuration: 0.5) {
+            self.blackView.alpha = 1
+            // 아래 내려가있는 tableView의 y좌표를 변경한다.
+            self.tableView.frame.origin.y -= 300
+        }
     }
     func configureTableView() {
         tableView.backgroundColor = .red
@@ -44,6 +63,13 @@ class ActionSheetLauncher: NSObject {
         tableView.isScrollEnabled = false
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
+    }
+    // MARK: - Selector
+    @objc func handleDismissal() {
+        UIView.animate(withDuration: 0.5) {
+            self.blackView.alpha = 0
+            self.tableView.frame.origin.y += 300
+        }
     }
 }
 extension ActionSheetLauncher: UITableViewDataSource {
