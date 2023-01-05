@@ -14,8 +14,8 @@ class TweetController: UICollectionViewController {
     
     // MARK: - Properties
     private let tweet: Tweet
-    
-    private var tweets = [Tweet]() {
+    private let actionSheetLauncher: ActionSheetLauncher
+    private var replies = [Tweet]() {
         didSet{
             collectionView.reloadData()
         }
@@ -23,6 +23,7 @@ class TweetController: UICollectionViewController {
     // MARK: - Lifecycle
     init(tweet: Tweet) {
         self.tweet = tweet
+        self.actionSheetLauncher = ActionSheetLauncher(user: tweet.user)
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
     }
     
@@ -45,7 +46,7 @@ class TweetController: UICollectionViewController {
     // MARK: - API
     func fetchReplies() {
         TweetService.shared.fetchReplies(tweet: tweet) { tweets in
-            self.tweets = tweets
+            self.replies = tweets
         }
     }
     
@@ -56,6 +57,7 @@ extension TweetController {
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerIdentifire, for: indexPath) as! TweetHeader
         header.tweet = tweet
+        header.delegate = self
         return header
     }
 }
@@ -63,11 +65,11 @@ extension TweetController {
 // MARK: - UICollectionViewDelegate
 extension TweetController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return tweets.count
+        return replies.count
     }
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! TweetCell
-        cell.tweet = tweets[indexPath.row]
+        cell.tweet = replies[indexPath.row]
         cell.delegate = self
         return cell
     }
@@ -100,6 +102,9 @@ extension TweetController: TweetCellDelegate {
         let controller = ProfileController(user: user)
         self.navigationController?.pushViewController(controller, animated: true)
     }
-    
-    
+}
+extension TweetController: TweetHeaderDelegate {
+    func showActionSheet() {
+        actionSheetLauncher.show()
+    }
 }

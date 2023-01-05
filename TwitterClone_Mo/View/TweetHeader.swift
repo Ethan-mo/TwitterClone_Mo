@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol TweetHeaderDelegate: class {
+    func showActionSheet()
+}
+
 class TweetHeader: UICollectionReusableView {
     // MARK: - Properties
     var tweet: Tweet? {
@@ -14,6 +18,8 @@ class TweetHeader: UICollectionReusableView {
             configure()
         }
     }
+    
+    week var delegate: TweetHeaderDelegate?
     
     private lazy var profileImageView: UIImageView = {
        let iv = UIImageView()
@@ -181,7 +187,7 @@ class TweetHeader: UICollectionReusableView {
     }
     
     @objc func showActionSheet() {
-        print("DEBUG: Push Option")
+        delegate?.showActionSheet()
     }
     @objc func handleCommentTapped() {
         print("DEBUG: Comment Label Tapped")
