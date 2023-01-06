@@ -9,6 +9,13 @@ import UIKit
 
 class ActionSheetCell: UITableViewCell {
     // MARK: - 속성
+    
+    var option: ActionSheetOptions? {
+        didSet {
+            configure()
+        }
+    }
+    
     private let optionImageView: UIImageView = {
        let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
@@ -38,10 +45,16 @@ class ActionSheetCell: UITableViewCell {
         stack.centerY(inView: self)
         stack.anchor(left: leftAnchor, paddingLeft: 8)
         
+        configure()
         
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Helper
+    func configure() {
+        titleLabel.text = option?.description
     }
 }
