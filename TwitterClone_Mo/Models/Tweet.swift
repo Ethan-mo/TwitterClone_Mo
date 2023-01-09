@@ -9,15 +9,15 @@ import Foundation
 
 struct Tweet {
     let caption: String
-    let tweetID:String
+    let tweetId:String
     let uid: String
     let likes: Int
     var timestamp: Date!
     let retweetCount: Int
     let user: User
     
-    init(user:User, tweetID: String, dictionary: [String: Any]) {
-        self.tweetID = tweetID
+    init(user:User, tweetId: String, dictionary: [String: Any]) {
+        self.tweetId = tweetId
         self.user = user
         
         self.caption = dictionary["caption"] as? String ?? ""

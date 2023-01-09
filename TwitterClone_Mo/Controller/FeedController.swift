@@ -35,6 +35,8 @@ class FeedController: UICollectionViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        fetchTweets()
+        collectionView.reloadData()
         navigationController?.navigationBar.isHidden = false
     }
     // MARK: - API

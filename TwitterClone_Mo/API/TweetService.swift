@@ -24,8 +24,12 @@ struct TweetService {
                 REF_USER_TWEETS.child(uid).updateChildValues([tweetID: 1], withCompletionBlock: completion)
             }
         case .reply(let tweet):
-            REF_TWEET_REPLIES.child(tweet.tweetID).childByAutoId().updateChildValues(values, withCompletionBlock: completion)
+            REF_TWEET_REPLIES.child(tweet.tweetId).childByAutoId().updateChildValues(values, withCompletionBlock: completion)
         }
+    }
+    func deleteTweet(tweetId:String, completion: @escaping(DatabaseCompletion)) {
+        REF_TWEETS.child(tweetId).removeValue(completionBlock: completion)
+        
     }
     
     func fetchTweets(completion: @escaping([Tweet]) -> Void) {
@@ -36,7 +40,7 @@ struct TweetService {
             let tweetID = snapshot.key
             
             UserService.shared.fetchUser(uid: uid) { user in
-                let tweet = Tweet(user: user, tweetID: tweetID, dictionary: dictionary)
+                let tweet = Tweet(user: user, tweetId: tweetID, dictionary: dictionary)
                 tweets.append(tweet)
                 completion(tweets)
             }
@@ -45,13 +49,13 @@ struct TweetService {
     
     func fetchReplies(tweet: Tweet, completion: @escaping([Tweet]) -> Void) {
         var tweets = [Tweet]()
-        REF_TWEET_REPLIES.child(tweet.tweetID).observe(.childAdded) { snapshot in
+        REF_TWEET_REPLIES.child(tweet.tweetId).observe(.childAdded) { snapshot in
             guard let dictionary = snapshot.value as? [String:AnyObject] else { return }
             guard let uid = dictionary["uid"] as? String else { return }
-            let tweetID = snapshot.key
+            let tweetId = snapshot.key
             
             UserService.shared.fetchUser(uid: uid) { user in
-                let tweet = Tweet(user: user, tweetID: tweetID, dictionary: dictionary)
+                let tweet = Tweet(user: user, tweetId: tweetId, dictionary: dictionary)
                 tweets.append(tweet)
                 completion(tweets)
             }
@@ -64,13 +68,13 @@ struct TweetService {
         var tweets = [Tweet]()
         // User-Tweets에서 특정 사용자가 작성한 Tweets의 고유 ID들을 가져온다.
         REF_USER_TWEETS.child(user.uid).observe(.childAdded) { snapshot in
-            let tweetID = snapshot.key
+            let tweetId = snapshot.key
             
             // Tweets 폴더에서 특정 tweetID에 맞는 Tweets을 불러온다.
-            REF_TWEETS.child(tweetID).observeSingleEvent(of: .value) { snapshot in
+            REF_TWEETS.child(tweetId).observeSingleEvent(of: .value) { snapshot in
                 guard let dictionary = snapshot.value as? [String:Any] else { return }
                 
-                let tweet = Tweet(user: user, tweetID: tweetID, dictionary: dictionary)
+                let tweet = Tweet(user: user, tweetId: tweetId, dictionary: dictionary)
                 tweets.append(tweet)
                 completion(tweets)
             }
