@@ -10,11 +10,14 @@ import UIKit
 private let reuseIdentifier = "TweetCell"
 private let headerIdentifire = "TweetHeader"
 
+
+
 class TweetController: UICollectionViewController {
     
     // MARK: - Properties
+
     private let tweet: Tweet
-    private let actionSheetLauncher: ActionSheetLauncher
+    private var actionSheetLauncher: ActionSheetLauncher!
     private var replies = [Tweet]() {
         didSet{
             collectionView.reloadData()
@@ -23,7 +26,6 @@ class TweetController: UICollectionViewController {
     // MARK: - Lifecycle
     init(tweet: Tweet) {
         self.tweet = tweet
-        self.actionSheetLauncher = ActionSheetLauncher(user: tweet.user)
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
     }
     
@@ -37,12 +39,7 @@ class TweetController: UICollectionViewController {
         fetchReplies()
     }
     
-    func configureCollectionView() {
-        collectionView.backgroundColor = .white
-        collectionView.register(TweetCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        collectionView.register(TweetHeader.self, forSupplementaryViewOfKind:
-                                    UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerIdentifire)
-    }
+    
     // MARK: - API
     func fetchReplies() {
         TweetService.shared.fetchReplies(tweet: tweet) { tweets in
@@ -51,6 +48,17 @@ class TweetController: UICollectionViewController {
     }
     
     // MARK: - Helper
+    func configureCollectionView() {
+        collectionView.backgroundColor = .white
+        collectionView.register(TweetCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView.register(TweetHeader.self, forSupplementaryViewOfKind:
+                                    UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerIdentifire)
+    }
+    fileprivate func showActionSheet(forUser user: User) {
+        actionSheetLauncher = ActionSheetLauncher(user: user)
+        actionSheetLauncher.delegate = self
+        actionSheetLauncher.show()
+    }
 }
 // MARK: - UICollectionViewDelegate
 extension TweetController {
@@ -103,8 +111,24 @@ extension TweetController: TweetCellDelegate {
         self.navigationController?.pushViewController(controller, animated: true)
     }
 }
+// MARK: - TweetHeaderDelegate
 extension TweetController: TweetHeaderDelegate {
     func showActionSheet() {
-        actionSheetLauncher.show()
+        if tweet.user.isCurrentUser {
+            showActionSheet(forUser: tweet.user)
+        } else {
+            UserService.shared.checkIfUserIsFollowed(uid: tweet.user.uid) { isFollowed in
+                var user = self.tweet.user
+                user.isFollowed = isFollowed
+                self.showActionSheet(forUser: user)
+            }
+        }
+    }
+}
+
+// MARK: - ActionSheetLauncherDelegate
+extension TweetController: ActionSheetLauncherDelegate {
+    func didSelect(option: ActionSheetOptions) {
+        print("DEBUG: \(option.description)")
     }
 }

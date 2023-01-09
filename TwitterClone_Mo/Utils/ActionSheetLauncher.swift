@@ -10,12 +10,19 @@ import UIKit
 
 private let reuseIdentifier = "ActionSheetCell"
 
+protocol ActionSheetLauncherDelegate: class {
+    func didSelect(option: ActionSheetOptions)
+}
+
+
 class ActionSheetLauncher: NSObject {
     // MARK: - 속성
     private let user: User
     private let tableView = UITableView()
     private var window: UIWindow?
     private lazy var viewModel = ActionSheetViewModel(user: user)
+    weak var delegate: ActionSheetLauncherDelegate?
+    private var tableViewHeight: CGFloat?
     
     private lazy var blackView: UIView = {
        let view = UIView()
@@ -55,6 +62,14 @@ class ActionSheetLauncher: NSObject {
         configureTableView()
     }
     // MARK: - Helpers
+    
+    func showTableView(_ shouldShow: Bool) {
+        guard let window = window else { return }
+        guard let height = tableViewHeight else { return }
+        let y = shouldShow ? window.frame.height - height : window.frame.height
+        tableView.frame.origin.y = y
+    }
+    
     func show() {
         guard let window = UIApplication.shared.windows.first(where: {$0.isKeyWindow}) else { return }
         self.window = window
@@ -63,6 +78,7 @@ class ActionSheetLauncher: NSObject {
         
         window.addSubview(tableView)
         let height = CGFloat(viewModel.options.count * 60) + 100
+        self.tableViewHeight = height
         
         // 이렇게만 설정하면, 화면에 없는 아래부분에 tableView가 생성된다.
         tableView.frame = CGRect(x: 0, y: window.frame.height, width: window.frame.width, height: height)
@@ -70,7 +86,7 @@ class ActionSheetLauncher: NSObject {
         UIView.animate(withDuration: 0.5) {
             self.blackView.alpha = 1
             // 아래 내려가있는 tableView의 y좌표를 변경한다.
-            self.tableView.frame.origin.y -= height
+            self.showTableView(true)
         }
     }
     func configureTableView() {
@@ -96,6 +112,7 @@ class ActionSheetLauncher: NSObject {
         }
     }
 }
+// MARK: - UITableViewDataSource
 extension ActionSheetLauncher: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.options.count
@@ -106,16 +123,23 @@ extension ActionSheetLauncher: UITableViewDataSource {
         return cell
     }
 }
-
+// MARK: - UITableViewDelegate
 extension ActionSheetLauncher: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let option = viewModel.options[indexPath.row]
+        
+        UIView.animate(withDuration: 0.5, animations: {
+            self.blackView.alpha = 0
+            self.showTableView(false)
+        }) { _ in
+            self.delegate?.didSelect(option: option)
+        }
+        
+    }
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         return footerView
     }
-//    func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
-//        return 60
-//    }
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 60
     }
 }
-
