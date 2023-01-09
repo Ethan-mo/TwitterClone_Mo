@@ -129,6 +129,20 @@ extension TweetController: TweetHeaderDelegate {
 // MARK: - ActionSheetLauncherDelegate
 extension TweetController: ActionSheetLauncherDelegate {
     func didSelect(option: ActionSheetOptions) {
-        print("DEBUG: \(option.description)")
+        switch option {
+        case .follow(let user):
+            UserService.shared.followUser(uid: user.uid) { (err,ref) in
+                print("DEBUG: Follow \(user.username)")
+            }
+        case .unfollow(let user):
+            UserService.shared.unfollowUser(uid: user.uid) { (err, ref) in
+                print("DEBUG: UnFollow \(user.username)")
+            }
+        case .report:
+            print("DEBUG: Report Tweet")
+        case .delete:
+            // 애초에 delete는 본인에게만 뜨므로, 따로 검증하는 절차는 없어도 된다. 
+            print("DEBUG: Delete Tweet..")
+        }
     }
 }
