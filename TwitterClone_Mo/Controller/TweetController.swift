@@ -96,6 +96,17 @@ extension TweetController: UICollectionViewDelegateFlowLayout {
 
 // MARK: - TweetCellDelegate
 extension TweetController: TweetCellDelegate {
+    func handleLikeTapped(_ cell: TweetCell) {
+        guard let tweet = cell.tweet else { return }
+        TweetService.shared.likeTweet(tweet: tweet) { (err,ref) in
+            cell.tweet?.didLike.toggle()
+            // 사실상 TweetService.shared.likeTweet내부에서, DB상의 Likes값이 변경되도록 설정이 되어있다.
+            // 아래에서 굳이 cell.tweet의 값을 변경해 주는 이유는 DB에 접근하여 likes값을 가져오지 않고도, 즉각적으로 값을 불러와주기 위해서다.(ex. Like tap시에 빨간색으로 변경하기) 
+            let likes = tweet.didLike ? tweet.likes - 1 : tweet.likes + 1
+            cell.tweet?.likes = likes
+        }
+    }
+    
     
     func handleReplyTapped(_ cell: TweetCell) {
         guard let tweet = cell.tweet else { return }
@@ -142,7 +153,7 @@ extension TweetController: ActionSheetLauncherDelegate {
             print("DEBUG: Report Tweet")
         case .delete:
             // 애초에 delete는 본인에게만 뜨므로, 따로 검증하는 절차는 없어도 된다.
-            TweetService.shared.deleteTweet(tweetId: tweet.tweetId) { (err,ref) in
+            TweetService.shared.deleteTweet(tweetId: tweet.tweetID) { (err,ref) in
                 print("DEBUG: Delete Tweet..")
             }
             
