@@ -6,7 +6,8 @@
 //
 
 import UIKit
-
+ 
+/// TweetViewModel은 가지고있는 tweet, user 정보에 따라서 초기값이나 기본 환경을 세팅하는 코드들을 담고있다.
 struct TweetViewModel {
     let tweet: Tweet
     let user: User
@@ -42,6 +43,13 @@ struct TweetViewModel {
         title.append(NSAttributedString(string: " ・ \(timestamp)", attributes: [.font: UIFont.systemFont(ofSize: 14), .foregroundColor: UIColor.lightGray ]))
         
         return title
+    }
+    var likeButtonTintColor: UIColor {
+        return tweet.didLike ? .red : .lightGray
+    }
+    var likeButtonImage: UIImage {
+        let imageName = tweet.didLike ? "like_filled" : "like"
+        return UIImage(named: imageName)!
     }
     
     init(tweet: Tweet) {
