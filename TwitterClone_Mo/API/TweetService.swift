@@ -88,7 +88,7 @@ struct TweetService {
         REF_TWEETS.child(tweet.tweetID).child("likes").setValue(likes)
         
         if tweet.didLike {
-            // unlike tweet 
+            // unlike tweet
             REF_USER_LIKES.child(uid).child(tweet.tweetID).removeValue { (err,ref) in
                 REF_TWEET_LIKES.child(tweet.tweetID).child(uid).removeValue(completionBlock: completion)
             }
@@ -108,7 +108,12 @@ struct TweetService {
                       "caption" : tweet.caption] as [String : Any]
         REF_TWEETS.child(tweet.tweetID).updateChildValues(values, withCompletionBlock: completion)
     }
-    
+    func checkIfUserLikedTweet(_ tweet: Tweet, completion: @escaping(Bool) -> Void) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        REF_USER_LIKES.child(uid).child(tweet.tweetID).observeSingleEvent(of: .value) { snapshot in
+            completion(snapshot.exists())
+        }
+    }
     
 }
 // Firebase 관련 메서드 정리
