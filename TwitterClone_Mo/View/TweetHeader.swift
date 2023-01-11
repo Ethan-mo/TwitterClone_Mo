@@ -9,6 +9,7 @@ import UIKit
 
 protocol TweetHeaderDelegate: class {
     func showActionSheet()
+    func handleLikeTapped(_ header:TweetHeader)
 }
 
 class TweetHeader: UICollectionReusableView {
@@ -196,6 +197,8 @@ class TweetHeader: UICollectionReusableView {
         print("DEBUG: Retweets Label Tapped")
     }
     @objc func handleLikeTapped() {
+        // 이전에 FeedController에서 Delegate를 사용하여 데이터를 전달했듯이, 이번에도 비슷하게 처리해주었다.
+        delegate?.handleLikeTapped(self)
         print("DEBUG: Likes Label Tapped")
     }
     @objc func handleShareTapped() {
@@ -213,6 +216,8 @@ class TweetHeader: UICollectionReusableView {
         dateLabel.text = viewModel.headerImtestamp
         retweetsLabel.attributedText = viewModel.retweetAttributedString
         likesLabel.attributedText = viewModel.likesAttributedString
+        likeButton.setImage(viewModel.likeButtonImage, for: .normal)
+        likeButton.tintColor = viewModel.likeButtonTintColor
     }
     
     func createButton(withImageName imageName: String) -> UIButton {

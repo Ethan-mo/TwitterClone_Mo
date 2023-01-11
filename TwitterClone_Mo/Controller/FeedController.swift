@@ -39,12 +39,13 @@ class FeedController: UICollectionViewController {
         collectionView.reloadData()
         navigationController?.navigationBar.isHidden = false
     }
+    
     // MARK: - API
     func fetchTweets() {
-        TweetService.shared.fetchTweets { tweets in
-            self.tweets = tweets
-            self.checkIfUserLikedTweets(tweets)
-        }
+            TweetService.shared.fetchTweets { tweets in
+                self.tweets = tweets
+                self.checkIfUserLikedTweets(tweets)
+            }
     }
     
     func checkIfUserLikedTweets(_ tweets: [Tweet]) {
@@ -94,11 +95,13 @@ extension FeedController {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! TweetCell
         cell.tweet = tweets[indexPath.row]
         cell.delegate = self
+        cell.cellCount = indexPath.row
         return cell
     }
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        // feed에 있는 cell을 눌렀을 때, TweetController로 넘어가는데, 해당 파일에 넘어가는 tweet정보는, FeedController tweets안에 담긴 tweet정보를 보내주게된다.
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! TweetCell
         let controller = TweetController(tweet:tweets[indexPath.row])
-        print("DEBUG: 피드에 있는 CEll을 선택하였습니다.")
         navigationController?.pushViewController(controller, animated: true)
     }
 
@@ -129,13 +132,31 @@ extension FeedController: TweetCellDelegate {
         self.navigationController?.pushViewController(controller, animated: true)
     }
     func handleLikeTapped(_ cell: TweetCell) {
+        // cell이 가지고있는 tweet 값을 가지고, FB의 DB에 접근한다.
+        // 만약, [좋아요]가 false였을 경우,
+        /// DB상,
+        /// tweet테이블에는 like값을 증가, tweet-likes, user-likes 테이블에는 추가
+        /// tweet테이블에는 like값을 감소, tweet-likes, user-likes 테이블에는 삭제
         guard let tweet = cell.tweet else { return }
         TweetService.shared.likeTweet(tweet: tweet) { (err,ref) in
+            
+            // 여기부터는, [좋아요]표시가 눌렸을 때, 즉각적인 반응을 얻기 위해 작성하는 코드이다.
+            /// cell의 tweet값이 변경되면서 didSet이 발동한다.
             cell.tweet?.didLike.toggle()
-            // 사실상 TweetService.shared.likeTweet내부에서, DB상의 Likes값이 변경되도록 설정이 되어있다.
-            // 아래에서 굳이 cell.tweet의 값을 변경해 주는 이유는 DB에 접근하여 likes값을 가져오지 않고도, 즉각적으로 값을 불러와주기 위해서다.(ex. Like tap시에 Like값에 따라 빨간색으로 변경하기)
-            let likes = tweet.didLike ? tweet.likes - 1 : tweet.likes + 1
-            cell.tweet?.likes = likes
+            cell.tweet?.likes = tweet.didLike ? tweet.likes - 1 : tweet.likes + 1
+            
+            // 문제는 여기서 발생한다. 현재 가지고있는 tweets:[Tweet] 값은 변경되지 않았다.
+            // fetchTweets를 실행하면, DB에서 직접 가져오기때문에, 시간은 조금 걸릴지언정, 정확한 값을 가져올 수 있다.
+            /// 다른 방법으로, tweets값을 갱신해야한다. 어떻게 가능할까?
+            
+            var tempTweets = self.tweets
+            for (index,element) in tempTweets.enumerated() {
+                if cell.tweet?.tweetID == element.tweetID {
+                    tempTweets[index].likes = cell.tweet?.likes ?? 0
+                    tempTweets[index].didLike = cell.tweet?.didLike ?? false
+                    self.tweets = tempTweets
+                }
+            }
         }
     }
 

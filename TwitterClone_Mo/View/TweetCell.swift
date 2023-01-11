@@ -17,7 +17,7 @@ protocol TweetCellDelegate: class {
 class TweetCell: UICollectionViewCell {
     
     // MARK: - Properties
-
+    var cellCount: Int = 0
     var tweet:Tweet?{
         didSet{ configure() }
     }
@@ -68,7 +68,6 @@ class TweetCell: UICollectionViewCell {
     
     private lazy var likeButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(named: "like"), for: .normal)
         button.tintColor = .darkGray
         button.setDimensions(width: 20, height: 20)
         button.addTarget(self, action: #selector(handleLikeTapped), for: .touchUpInside)
