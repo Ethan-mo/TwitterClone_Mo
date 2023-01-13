@@ -17,6 +17,7 @@ class TweetHeader: UICollectionReusableView {
     var tweet: Tweet? {
         didSet{
             configure()
+            print("DEBUG: 값이 변경됬네")
         }
     }
     
@@ -199,7 +200,7 @@ class TweetHeader: UICollectionReusableView {
     @objc func handleLikeTapped() {
         // 이전에 FeedController에서 Delegate를 사용하여 데이터를 전달했듯이, 이번에도 비슷하게 처리해주었다.
         delegate?.handleLikeTapped(self)
-        print("DEBUG: Likes Label Tapped")
+        print("DEBUG: TweetHeader에서 좋아요 표시를 눌렀습니다.")
     }
     @objc func handleShareTapped() {
         print("DEBUG: Share Label Tapped")

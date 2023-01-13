@@ -124,13 +124,14 @@ extension TweetController: TweetCellDelegate {
 }
 // MARK: - TweetHeaderDelegate
 extension TweetController: TweetHeaderDelegate {
+    //이제 여기서 작업하기를, header에 있는 tweet값을 변경시켜 주어야 한다.
     // tweetHeader에서 [좋아요]버튼을 눌렀을 때 생기는 일
     func handleLikeTapped(_ header:TweetHeader) {
         // 가지고있는 tweet정보에 근거아래 likeTweet()을 실행한다.
         TweetService.shared.likeTweet(tweet: tweet) { (err, ref) in
-            // tweet의 didLike값을 스위칭하고, 
-            self.tweet.didLike.toggle()
-            let likes = self.tweet.didLike ? self.tweet.likes - 1 : self.tweet.likes + 1
+            // tweet의 didLike값을 스위칭하고,
+            let likes = header.tweet?.didLike ?? false ? (header.tweet?.likes ?? 0) - 1 : (header.tweet?.likes ?? 0) + 1
+            header.tweet?.didLike.toggle()
             header.tweet?.likes = likes
         }
         
