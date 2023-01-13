@@ -17,7 +17,6 @@ class TweetHeader: UICollectionReusableView {
     var tweet: Tweet? {
         didSet{
             configure()
-            print("DEBUG: 값이 변경됬네")
         }
     }
     

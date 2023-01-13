@@ -101,7 +101,7 @@ struct TweetService {
     }
     /// 트윗의 내용이 변경 되었을 때
     func updateTweet(tweet:Tweet, completion: @escaping(DatabaseCompletion)) {
-        let values = ["uid" : tweet.uid,
+        let values = ["uid" : tweet.user.uid,
                       "timestamp" : tweet.timestamp,
                       "likes" : tweet.likes,
                       "retweets" : tweet.retweetCount,

@@ -133,6 +133,10 @@ extension TweetController: TweetHeaderDelegate {
             let likes = header.tweet?.didLike ?? false ? (header.tweet?.likes ?? 0) - 1 : (header.tweet?.likes ?? 0) + 1
             header.tweet?.didLike.toggle()
             header.tweet?.likes = likes
+            
+            // 아래 guard문은 좋아요가 [ 비활성화 상태 > 활성화 상태 ] 일때만, 실행하기 위해서 작성한다.
+            guard header.tweet?.didLike ?? false else { return }
+            NotificationService.shard.uploadNotification(type: .like, tweet: header.tweet)
         }
         
     }

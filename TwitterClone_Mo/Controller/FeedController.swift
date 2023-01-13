@@ -132,22 +132,11 @@ extension FeedController: TweetCellDelegate {
         self.navigationController?.pushViewController(controller, animated: true)
     }
     func handleLikeTapped(_ cell: TweetCell) {
-        // cell이 가지고있는 tweet 값을 가지고, FB의 DB에 접근한다.
-        // 만약, [좋아요]가 false였을 경우,
-        /// DB상,
-        /// tweet테이블에는 like값을 증가, tweet-likes, user-likes 테이블에는 추가
-        /// tweet테이블에는 like값을 감소, tweet-likes, user-likes 테이블에는 삭제
         guard let tweet = cell.tweet else { return }
         TweetService.shared.likeTweet(tweet: tweet) { (err,ref) in
-            
-            // 여기부터는, [좋아요]표시가 눌렸을 때, 즉각적인 반응을 얻기 위해 작성하는 코드이다.
-            /// cell의 tweet값이 변경되면서 didSet이 발동한다.
             cell.tweet?.didLike.toggle()
             cell.tweet?.likes = tweet.didLike ? tweet.likes - 1 : tweet.likes + 1
-            
-            // 문제는 여기서 발생한다. 현재 가지고있는 tweets:[Tweet] 값은 변경되지 않았다.
-            // fetchTweets를 실행하면, DB에서 직접 가져오기때문에, 시간은 조금 걸릴지언정, 정확한 값을 가져올 수 있다.
-            /// 다른 방법으로, tweets값을 갱신해야한다. 어떻게 가능할까?
+
             
             var tempTweets = self.tweets
             for (index,element) in tempTweets.enumerated() {
@@ -157,6 +146,10 @@ extension FeedController: TweetCellDelegate {
                     self.tweets = tempTweets
                 }
             }
+            
+            guard !tweet.didLike else { return }
+            NotificationService.shard.uploadNotification(type: .like, tweet: cell.tweet) // 강의에서는 cell.tweet을 tweet대신 사용했는데, 사실 상관없다.
+            // uploadNotification()메서드에서는 사실상 tweet에 있는 user정보와 tweet.tweetID만 필요로 하고, 이를 DB에 저장하기 때문에, like값과 didlike값이 중요하지 않은 상황에서 딱히 cell.tweet을 안써도 된다.
         }
     }
 
