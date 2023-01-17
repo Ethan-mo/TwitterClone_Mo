@@ -27,30 +27,27 @@ struct TweetService {
             REF_TWEET_REPLIES.child(tweet.tweetID).childByAutoId().updateChildValues(values, withCompletionBlock: completion)
         }
     }
-    func deleteTweet(tweetId:String, completion: @escaping(DatabaseCompletion)) {
-        REF_TWEETS.child(tweetId).removeValue(completionBlock: completion)
+    func deleteTweet(tweetID:String, completion: @escaping(DatabaseCompletion)) {
+        REF_TWEETS.child(tweetID).removeValue(completionBlock: completion)
         
+    }
+    func fetchTweet(withTweetID tweetID:String, completion: @escaping(Tweet) -> Void) {
+        // Tweets 폴더에서 특정 tweetID에 맞는 Tweets을 불러온다.
+        REF_TWEETS.child(tweetID).observeSingleEvent(of: .value) { snapshot in
+            guard let dictionary = snapshot.value as? [String:Any] else { return }
+            guard let uid = dictionary["uid"] as? String else { return }
+            
+            UserService.shared.fetchUser(uid: uid) { user in
+                let tweet = Tweet(user: user, tweetID: tweetID, dictionary: dictionary)
+                completion(tweet)
+            }
+        }
     }
     
     func fetchTweets(completion: @escaping([Tweet]) -> Void) {
         var tweets = [Tweet]()
         REF_TWEETS.observe(.childAdded) { snapshot in
             guard let dictionary = snapshot.value as? [String:Any] else { return }
-            guard let uid = dictionary["uid"] as? String else { return }
-            let tweetID = snapshot.key
-            
-            UserService.shared.fetchUser(uid: uid) { user in
-                let tweet = Tweet(user: user, tweetID: tweetID, dictionary: dictionary)
-                tweets.append(tweet)
-                completion(tweets)
-            }
-        }
-    }
-    
-    func fetchReplies(tweet: Tweet, completion: @escaping([Tweet]) -> Void) {
-        var tweets = [Tweet]()
-        REF_TWEET_REPLIES.child(tweet.tweetID).observe(.childAdded) { snapshot in
-            guard let dictionary = snapshot.value as? [String:AnyObject] else { return }
             guard let uid = dictionary["uid"] as? String else { return }
             let tweetID = snapshot.key
             
@@ -71,15 +68,28 @@ struct TweetService {
             let tweetID = snapshot.key
             
             // Tweets 폴더에서 특정 tweetID에 맞는 Tweets을 불러온다.
-            REF_TWEETS.child(tweetID).observeSingleEvent(of: .value) { snapshot in
-                guard let dictionary = snapshot.value as? [String:Any] else { return }
-                
+            self.fetchTweet(withTweetID: tweetID) { tweet in
+                tweets.append(tweet)
+                completion(tweets)
+            }
+        }
+    }
+    
+    func fetchReplies(tweet: Tweet, completion: @escaping([Tweet]) -> Void) {
+        var tweets = [Tweet]()
+        REF_TWEET_REPLIES.child(tweet.tweetID).observe(.childAdded) { snapshot in
+            guard let dictionary = snapshot.value as? [String:AnyObject] else { return }
+            guard let uid = dictionary["uid"] as? String else { return }
+            let tweetID = snapshot.key
+            
+            UserService.shared.fetchUser(uid: uid) { user in
                 let tweet = Tweet(user: user, tweetID: tweetID, dictionary: dictionary)
                 tweets.append(tweet)
                 completion(tweets)
             }
         }
     }
+    
     /// 트윗을 좋아요 했을 때
     func likeTweet(tweet: Tweet, completion: @escaping(DatabaseCompletion)) {
         // 현재 나의 uid를 구해주기 위해 아래와 같은 절차를 거친다.

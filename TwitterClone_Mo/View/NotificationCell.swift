@@ -8,26 +8,27 @@
 import UIKit
 
 protocol NotificationDelegate: class {
-    func handleProfileImageTapped(_ cell: UITableViewCell)
+    func didTapProfileImage(_ cell: NotificationCell)
 }
 
 class NotificationCell: UITableViewCell {
+    
     // MARK: - Properties
+    weak var delegate:NotificationDelegate?
     
-    var delegate:NotificationDelegate?
-    
-    var notification:Notification {
+    var notification:Notification? {
         didSet{
-            configureUi()
+            configureUI()
         }
     }
+    
     
     private lazy var profileImageView: UIImageView = {
        let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
         iv.clipsToBounds = true
-        iv.setDimensions(width: 48, height: 48)
-        iv.layer.cornerRadius = 48 / 2
+        iv.setDimensions(width: 40, height: 40)
+        iv.layer.cornerRadius = 40 / 2
         iv.backgroundColor = .twitterBlue
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
@@ -42,34 +43,44 @@ class NotificationCell: UITableViewCell {
         label.font = UIFont.systemFont(ofSize: 14)
         return label
     }()
-    private lazy var timeLabel: UILabel = {
-       let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = UIColor.systemGray
-        return label
+    private lazy var followButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Loading", for: .normal)
+        button.setTitleColor(.twitterBlue, for: .normal)
+        button.backgroundColor = .white
+        button.layer.borderColor = UIColor.twitterBlue.cgColor
+        button.layer.borderWidth = 2
+        button.addTarget(self, action: #selector(handleFollowTapped), for: .touchUpInside)
+        return button
     }()
     
     // MARK: - LifeCycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        configureUi()
+        let stack = UIStackView(arrangedSubviews: [profileImageView, notificationMessage, followButton])
+        stack.spacing = 8
+        stack.alignment = .center
+        contentView.addSubview(stack)
+        stack.centerY(inView: self, leftAnchor: leftAnchor, paddingLeft: 12)
+        stack.anchor(right:rightAnchor)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     // MARK: - Selector
     @objc func handleProfileImageTapped() {
-        delegate?.handleProfileImageTapped(self)
+        print("DEBUG:클릭")
+        delegate?.didTapProfileImage(self)
     }
-    
+    @objc func handleFollowTapped() {
+        print("DEBUG: 팔로우 버튼을 누름")
+    }
     // MARK: - Helper
-    func configureUi() {
-        let stack = UIStackView(arrangedSubviews: [profileImageView, notificationMessage, timeLabel])
-        stack.spacing = 8
-        stack.alignment = .center
-        addSubview(stack)
-        stack.centerY(inView: self, leftAnchor: leftAnchor, paddingLeft: 12)
-        stack.anchor(right:rightAnchor)
+    func configureUI() {
+        guard let notification = notification else { return }
+        let viewModel = NotificationViewModel(notification: notification)
+        profileImageView.sd_setImage(with: viewModel.profileImageUrl)
+        notificationMessage.attributedText = viewModel.notificationText
     }
 }

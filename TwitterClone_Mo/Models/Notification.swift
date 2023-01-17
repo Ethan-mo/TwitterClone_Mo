@@ -16,18 +16,19 @@ enum NotificationType: Int {
 }
 
 struct Notification {
-    let tweetID: String?
+    var tweetID: String?
     var timestamp: Date!
     let user: User
     var tweet: Tweet?
     var type: NotificationType!
     
     // 항상 알림에 Tweet이 연관되어있는건 아니다. (ex. 팔로우)
-    init(user:User, tweet: Tweet?, dictionary: [String : AnyObject]) {
+    init(user:User, dictionary: [String : AnyObject]) {
         self.user = user
-        self.tweet = tweet
         
-        self.tweetID = dictionary["tweetID"] as? String ?? ""
+        if let tweetID = dictionary["tweetID"] as? String {
+            self.tweetID = tweetID
+        }
         
         if let timestamp = dictionary["timestamp"] as? Double {
             self.timestamp = Date(timeIntervalSince1970: timestamp)

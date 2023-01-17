@@ -170,7 +170,7 @@ extension TweetController: ActionSheetLauncherDelegate {
             print("DEBUG: Report Tweet")
         case .delete:
             // 애초에 delete는 본인에게만 뜨므로, 따로 검증하는 절차는 없어도 된다.
-            TweetService.shared.deleteTweet(tweetId: tweet.tweetID) { (err,ref) in
+            TweetService.shared.deleteTweet(tweetID: tweet.tweetID) { (err,ref) in
                 print("DEBUG: Delete Tweet..")
             }
             
