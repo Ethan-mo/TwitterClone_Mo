@@ -31,6 +31,16 @@ class NotificationsController: UITableViewController{
     func fetchNotification() {
         NotificationService.shard.fetchNotifications { notifications in
             self.notifications = notifications
+            
+            for (index,element) in notifications.enumerated() {
+                if case .follow = element.type {
+                    print("DEBUG: 여기서 팔로우 처리해주면 된다.")
+                    let user = element.user
+                    UserService.shared.checkIfUserIsFollowed(uid: user.uid) { isFollowed in
+                        self.notifications[index].user.isFollowed = isFollowed 
+                    }
+                }
+            }
         }
     }
     

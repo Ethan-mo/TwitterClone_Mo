@@ -9,7 +9,7 @@ import UIKit
 import Firebase
 
 class MainTabController: UITabBarController {
-    
+    // MARK: - Properties
     var user: User?{
         didSet{
             // 사용자 정보를 정상적으로 불러오면 didSet이 작동한다.
@@ -24,7 +24,6 @@ class MainTabController: UITabBarController {
         }
     }
 
-    // MARK: - Properties
     let actionButton: UIButton = {
         let button = UIButton(type: .system)
         button.tintColor = .white

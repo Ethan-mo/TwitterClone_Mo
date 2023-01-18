@@ -57,12 +57,18 @@ class NotificationCell: UITableViewCell {
     // MARK: - LifeCycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        let stack = UIStackView(arrangedSubviews: [profileImageView, notificationMessage, followButton])
+        let stack = UIStackView(arrangedSubviews: [profileImageView, notificationMessage])
         stack.spacing = 8
         stack.alignment = .center
         contentView.addSubview(stack)
         stack.centerY(inView: self, leftAnchor: leftAnchor, paddingLeft: 12)
         stack.anchor(right:rightAnchor)
+        
+        contentView.addSubview(followButton)
+        followButton.centerY(inView: self)
+        followButton.setDimensions(width: 92, height: 32)
+        followButton.layer.cornerRadius = 32 / 2
+        followButton.anchor(right: rightAnchor, paddingRight: 12)
     }
 
     required init?(coder: NSCoder) {
@@ -82,5 +88,7 @@ class NotificationCell: UITableViewCell {
         let viewModel = NotificationViewModel(notification: notification)
         profileImageView.sd_setImage(with: viewModel.profileImageUrl)
         notificationMessage.attributedText = viewModel.notificationText
+        followButton.isHidden = viewModel.shouldHideFollowButton
+        followButton.setTitle(viewModel.followButtonText, for: .normal)
     }
 }

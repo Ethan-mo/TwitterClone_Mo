@@ -54,6 +54,7 @@ class LoginController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        
     }
         // MARK: - Selectors
     @objc func handleLogin(){
@@ -99,7 +100,9 @@ class LoginController: UIViewController{
         
         view.addSubview(dontAccountButton)
         dontAccountButton.anchor(left:view.leftAnchor,bottom:view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor,paddingLeft: 40 ,paddingBottom: 16,paddingRight: 40)
-        
+    }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
     }
 }
 

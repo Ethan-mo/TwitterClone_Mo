@@ -89,11 +89,12 @@ class RegistrationController: UIViewController{
         guard let password = passwordTextField.text else { return }
         guard let fullname = fullNameTextField.text else { return }
         guard let username = nickNameTextField.text?.lowercased() else { return }
-        
+        print("DEBUG: 아이디 생성하기")
         let credentials = AuthCredentials(email: email, password: password, fullname: fullname,
                                           username: username, profileImage: profileImage)
         
         AuthService.shared.registerUser(credentials: credentials) { (error, ref) in
+            print(error)
             guard let window = UIApplication.shared.windows.first(where: {$0.isKeyWindow}) else { return }
             guard let tab = window.rootViewController as? MainTabController else { return }
             tab.authenticateUserAndConfigureUI()
@@ -131,6 +132,9 @@ class RegistrationController: UIViewController{
         view.addSubview(alreadyHaveAccountButton)
         alreadyHaveAccountButton
             .anchor(left:view.leftAnchor,bottom:view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor,paddingLeft: 40 ,paddingBottom: 16,paddingRight: 40)
+    }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
     }
 }
 // MARK: - UIImagePickerControllerDelegate

@@ -10,6 +10,7 @@ import SDWebImage
 
 private let reuseIdentifier = "tweetCell"
 
+
 class FeedController: UICollectionViewController {
     // MARK: - Properties
     var user: User? {
@@ -26,6 +27,7 @@ class FeedController: UICollectionViewController {
             collectionView.reloadData()
         }
     }
+
     
     // MARK: - Lifecycle 
     override func viewDidLoad() {
@@ -56,7 +58,8 @@ class FeedController: UICollectionViewController {
             }
         }
     }
-    
+    // MARK: - Selector
+
     // MARK: - Helpers
     
     func configureUI(){
@@ -73,15 +76,13 @@ class FeedController: UICollectionViewController {
     func configureLeftBarButton() {
         guard let user = user else { return }
         
-        let profileImageView = UIImageView()
-        profileImageView.setDimensions(width: 32, height: 32)
-        profileImageView.layer.cornerRadius = 32 / 2
-        profileImageView.layer.masksToBounds = true
-        
-        profileImageView.sd_setImage(with: user.profileImageUrl, completed: nil)
-        
-        
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: profileImageView)
+        let iv = UIImageView()
+         iv.setDimensions(width: 32, height: 32)
+         iv.layer.cornerRadius = 32 / 2
+         iv.layer.masksToBounds = true
+         
+         iv.sd_setImage(with: user.profileImageUrl)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: iv)
     }
 }
 
