@@ -127,6 +127,11 @@ extension ProfileController: UICollectionViewDelegateFlowLayout {
 }
 // MARK: - ProfileHeaderDelegate
 extension ProfileController: ProfileHeaderDelegate {
+    func didSelect(filter: ProfileFilterOptions) {
+        print("DEBUG: 선택한 Filter인 \(filter.descroption) 바로 여기서 제대로 실행합니다. (왜냐? 내가 컨트롤러거든~)")
+        self.selectedFilter = filter
+    }
+    
     func handleDismissal() {
         navigationController?.popViewController(animated: true)
     }

@@ -11,6 +11,7 @@ import Firebase
 protocol ProfileHeaderDelegate : class {
     func handleDismissal()
     func handleEditProfileFollow(_ header: ProfileHeader)
+    func didSelect(filter: ProfileFilterOptions)
 }
 
 class ProfileHeader: UICollectionReusableView {
@@ -91,11 +92,7 @@ class ProfileHeader: UICollectionReusableView {
         return view
     }()
     
-    private let underlineView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .twitterBlue
-        return view
-    }()
+    
     
     private let followersLabel: UILabel = {
         let label = UILabel()        
@@ -157,9 +154,9 @@ class ProfileHeader: UICollectionReusableView {
         addSubview(divlineView)
         divlineView.anchor(left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, height: 1)
         
-        addSubview(underlineView)
+        
         let count = CGFloat(ProfileFilterOptions.allCases.count)
-        underlineView.anchor(left: leftAnchor, bottom: bottomAnchor, width: frame.width / count, height: 2)
+        
         
         
     }
@@ -198,11 +195,11 @@ class ProfileHeader: UICollectionReusableView {
     }
 }
 extension ProfileHeader: ProfileFilterViewDelegate {
-    func filterView(_ view: ProfileFilterView, diSelect indexPath: IndexPath) {
-        guard let cell = view.collectionView.cellForItem(at: indexPath) as? ProfileFilterCell else { return }
-        let xPosition = cell.frame.origin.x
-        UIView.animate(withDuration: 0.3) {
-            self.underlineView.frame.origin.x = xPosition
-        }
+    func filterView(_ view: ProfileFilterView, diSelect index: Int) {
+        guard let filter = ProfileFilterOptions(rawValue: index) else { return }
+        
+        print("DEBUG: FilterView에서 실행한 delegate로 컨트롤러로 작업을 위임합니다. 즉 2중으로 위임을 시키겠다는 말씀~ \(filter.descroption)")
+        
+        delegate?.didSelect(filter: filter)
     }
 }
