@@ -14,11 +14,27 @@ class ProfileController: UICollectionViewController {
     // MARK: - Properties
     private var user: User
     
+    private var selectedFilter: ProfileFilterOptions = .tweets{
+        didSet{collectionView.reloadData()}
+    }
+    
     private var tweets = [Tweet]() {
         didSet{
             collectionView.reloadData()
         }
     }
+    private var likedTweets = [Tweet]()
+    
+    private var replies = [Tweet]()
+    
+    private var currentDataSource: [Tweet] {
+        switch selectedFilter {
+        case .tweets: return tweets
+        case .replies: return replies
+        case .likes: return likedTweets
+        }
+    }
+    
     // MARK: - Lifectcle
     
     init(user:User) {
@@ -48,6 +64,7 @@ class ProfileController: UICollectionViewController {
     func fetchTweets() {
         TweetService.shared.fetchTweets(user: user) { tweets in
             self.tweets = tweets
+            self.collectionView.reloadData()
         }
     }
     func checkIfUserIsFollowed() {
@@ -78,12 +95,12 @@ class ProfileController: UICollectionViewController {
 
 extension ProfileController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return tweets.count
+        return currentDataSource.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! TweetCell
-        cell.tweet = tweets[indexPath.row]
+        cell.tweet = currentDataSource[indexPath.row]
         return cell
     }
     
