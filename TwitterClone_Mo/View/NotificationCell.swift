@@ -8,6 +8,7 @@
 import UIKit
 
 protocol NotificationDelegate: class {
+    func didTapFollow(_ cell: NotificationCell)
     func didTapProfileImage(_ cell: NotificationCell)
 }
 
@@ -80,6 +81,7 @@ class NotificationCell: UITableViewCell {
         delegate?.didTapProfileImage(self)
     }
     @objc func handleFollowTapped() {
+        delegate?.didTapFollow(self)
         print("DEBUG: 팔로우 버튼을 누름")
     }
     // MARK: - Helper
