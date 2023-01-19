@@ -24,7 +24,13 @@ struct TweetService {
                 REF_USER_TWEETS.child(uid).updateChildValues([tweetID: 1], withCompletionBlock: completion)
             }
         case .reply(let tweet):
-            REF_TWEET_REPLIES.child(tweet.tweetID).childByAutoId().updateChildValues(values, withCompletionBlock: completion)
+            REF_TWEET_REPLIES.child(tweet.tweetID).childByAutoId()
+                .updateChildValues(values) { (err, ref) in
+                    guard let replyKey = ref.key else { return }
+                    REF_USER_REPLIES.child(uid).updateChildValues([tweet.tweetID: replyKey],
+                                                                  withCompletionBlock: completion)
+            }
+            
         }
     }
     func deleteTweet(tweetID:String, completion: @escaping(DatabaseCompletion)) {
@@ -75,12 +81,12 @@ struct TweetService {
         }
     }
     
-    func fetchReplies(tweet: Tweet, completion: @escaping([Tweet]) -> Void) {
+    func fetchReplies(tweetID: String, completion: @escaping([Tweet]) -> Void) {
         var tweets = [Tweet]()
-        REF_TWEET_REPLIES.child(tweet.tweetID).observe(.childAdded) { snapshot in
-            guard let dictionary = snapshot.value as? [String:AnyObject] else { return }
+        REF_TWEET_REPLIES.child(tweetID).observe(.childAdded) { snapshot in
+            guard let dictionary = snapshot.value as? [String:AnyObject] else { return } // 여기에는 Dictionary형태로 되어있는 데이터가 들어있다.
             guard let uid = dictionary["uid"] as? String else { return }
-            let tweetID = snapshot.key
+            let tweetID = snapshot.key // 여기에는 자동으로 생성된 ReplyID가 들어있다.
             
             UserService.shared.fetchUser(uid: uid) { user in
                 let tweet = Tweet(user: user, tweetID: tweetID, dictionary: dictionary)
@@ -89,6 +95,28 @@ struct TweetService {
             }
         }
     }
+    // 트윗ID와 내부에 Key에는
+    func fetchMyReplies(forUser user: User, completion: @escaping([Tweet]) -> Void) {
+        var tweets = [Tweet]()
+        
+        REF_USER_REPLIES.child(user.uid).observe(.childAdded) { snapshot in
+            let tweetID = snapshot.key
+            guard let replyID = snapshot.value else { return }
+            
+            REF_TWEET_REPLIES.child(tweetID).observe(.childAdded) { snapshot in
+                guard let dictionary = snapshot.value as? [String:AnyObject] else { return }
+                guard let uid = dictionary["uid"] as? String else { return }
+                let tweetID = snapshot.key
+                
+                UserService.shared.fetchUser(uid: uid) { user in
+                    let tweet = Tweet(user: user, tweetID: tweetID, dictionary: dictionary)
+                    tweets.append(tweet)
+                    completion(tweets)
+                }
+            }
+        }
+    }
+    
     func fetchLike(forUser user:User, completion: @escaping([Tweet]) -> Void) {
         var tweets = [Tweet]()
 
