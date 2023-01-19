@@ -10,9 +10,14 @@ import SDWebImage
 
 private let reuseIdentifier = "tweetCell"
 
+protocol FeedControllerDelegate : class {
+    func tappedImageView()
+}
 
 class FeedController: UICollectionViewController {
     // MARK: - Properties
+    
+    weak var delegate: FeedControllerDelegate?
     var user: User? {
         // user의 profileImage를 불러와야 가능한 부분이기때문에, didSet을 사용
         didSet{
@@ -59,7 +64,9 @@ class FeedController: UICollectionViewController {
         }
     }
     // MARK: - Selector
-
+    @objc func handleProfileImage() {
+        delegate?.tappedImageView()
+    }
     // MARK: - Helpers
     
     func configureUI(){
@@ -81,6 +88,10 @@ class FeedController: UICollectionViewController {
          iv.layer.cornerRadius = 32 / 2
          iv.layer.masksToBounds = true
          
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImage))
+         iv.addGestureRecognizer(tap)
+         iv.isUserInteractionEnabled = true
          iv.sd_setImage(with: user.profileImageUrl)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: iv)
     }
@@ -89,7 +100,6 @@ class FeedController: UICollectionViewController {
 // MARK: - UICollectionViewDelegate/DataSource
 extension FeedController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print("DEBUG: 일단 트윗의 숫자는: \(tweets.count)")
         return tweets.count
     }
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

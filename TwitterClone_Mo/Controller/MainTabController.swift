@@ -104,6 +104,7 @@ class MainTabController: UITabBarController {
     
     func configureViewControllers(){
         let feed = FeedController(collectionViewLayout: UICollectionViewFlowLayout())
+        feed.delegate = self
         let nav1 = templateNavigationController(image: UIImage(named: "home_unselected"), rootViewController: feed)
         
         let explore = ExploreController()
@@ -138,4 +139,10 @@ class MainTabController: UITabBarController {
         }
     }
 
+}
+extension MainTabController: FeedControllerDelegate {
+    func tappedImageView() {
+        logUserOut()
+        authenticateUserAndConfigureUI()
+    }
 }
