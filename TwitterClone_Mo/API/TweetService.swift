@@ -89,6 +89,20 @@ struct TweetService {
             }
         }
     }
+    func fetchLike(forUser user:User, completion: @escaping([Tweet]) -> Void) {
+        var tweets = [Tweet]()
+
+        REF_USER_LIKES.child(user.uid).observe(.childAdded) { snapshot in
+            let tweetID = snapshot.key
+            self.fetchTweet(withTweetID: tweetID) { likedTweet in
+                var tweet = likedTweet
+                tweet.didLike = true
+                tweets.append(tweet)
+                completion(tweets)
+            }
+        }
+    }
+    
     
     /// 트윗을 좋아요 했을 때
     func likeTweet(tweet: Tweet, completion: @escaping(DatabaseCompletion)) {
