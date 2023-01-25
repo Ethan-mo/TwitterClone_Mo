@@ -49,9 +49,14 @@ class FeedController: UICollectionViewController {
     
     // MARK: - API
     func fetchTweets() {
+        collectionView.refreshControl?.beginRefreshing()
             TweetService.shared.fetchTweets { tweets in
                 self.tweets = tweets
                 self.checkIfUserLikedTweets(tweets)
+                
+                self.tweets = tweets.sorted(by: { $0.timestamp > $1.timestamp })
+                
+                self.collectionView.refreshControl?.endRefreshing()
             }
     }
     
@@ -67,6 +72,9 @@ class FeedController: UICollectionViewController {
     @objc func handleProfileImage() {
         delegate?.tappedImageView()
     }
+    @objc func handleRefresh() {
+        fetchTweets()
+    }
     // MARK: - Helpers
     
     func configureUI(){
@@ -79,6 +87,10 @@ class FeedController: UICollectionViewController {
         imageView.contentMode = .scaleAspectFit
         imageView.setDimensions(width: 44, height: 44) // 이부분은 잘 이해가 되지 않는다. 가운데 정렬도아니고, 가로 세로를 기입해준걸까?
         navigationItem.titleView = imageView
+        
+        let refreshControl = UIRefreshControl()
+        collectionView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
     }
     func configureLeftBarButton() {
         guard let user = user else { return }

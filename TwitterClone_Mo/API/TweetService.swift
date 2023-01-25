@@ -53,17 +53,39 @@ struct TweetService {
     
     func fetchTweets(completion: @escaping([Tweet]) -> Void) {
         var tweets = [Tweet]()
-        REF_TWEETS.observe(.childAdded) { snapshot in
-            guard let dictionary = snapshot.value as? [String:Any] else { return }
-            guard let uid = dictionary["uid"] as? String else { return }
-            let tweetID = snapshot.key
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        REF_USER_FOLLOWING.child(currentUid).observe(.childAdded) { snapshot in
+            let followingUid = snapshot.key
+            REF_USER_TWEETS.child(followingUid).observe(.childAdded) { snapshot in
+                let tweetID = snapshot.key
+
+                self.fetchTweet(withTweetID: tweetID) { tweet in
+                    tweets.append(tweet)
+                    completion(tweets)
+                }
+            }
             
-            UserService.shared.fetchUser(uid: uid) { user in
-                let tweet = Tweet(user: user, tweetID: tweetID, dictionary: dictionary)
+
+        }
+        REF_USER_TWEETS.child(currentUid).observe(.childAdded) { snapshot in
+            let tweetID = snapshot.key
+
+            self.fetchTweet(withTweetID: tweetID) { tweet in
                 tweets.append(tweet)
                 completion(tweets)
             }
         }
+//        REF_TWEETS.observe(.childAdded) { snapshot in
+//            guard let dictionary = snapshot.value as? [String:Any] else { return }
+//            guard let uid = dictionary["uid"] as? String else { return }
+//            let tweetID = snapshot.key
+//
+//            UserService.shared.fetchUser(uid: uid) { user in
+//                let tweet = Tweet(user: user, tweetID: tweetID, dictionary: dictionary)
+//                tweets.append(tweet)
+//                completion(tweets)
+//            }
+//        }
     }
     /**
      Tweets을 불러오는 메서드로, 기존 fetchTweets()과는 다르게, user를 매개변수로 받아서, 해당 user정보에 들어있는 uid를 통해 해당 사용자가 작성한 Tweets을 불러온다.
