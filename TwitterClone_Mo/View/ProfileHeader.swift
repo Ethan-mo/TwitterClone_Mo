@@ -198,7 +198,7 @@ extension ProfileHeader: ProfileFilterViewDelegate {
     func filterView(_ view: ProfileFilterView, diSelect index: Int) {
         guard let filter = ProfileFilterOptions(rawValue: index) else { return }
         
-        print("DEBUG: FilterView에서 실행한 delegate로 컨트롤러로 작업을 위임합니다. 즉 2중으로 위임을 시키겠다는 말씀~ \(filter.descroption)")
+        //print("DEBUG: FilterView에서 실행한 delegate로 컨트롤러로 작업을 위임합니다. 즉 2중으로 위임을 시키겠다는 말씀~ \(filter.descroption)")
         
         delegate?.didSelect(filter: filter)
     }

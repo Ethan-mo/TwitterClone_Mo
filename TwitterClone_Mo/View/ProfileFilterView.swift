@@ -60,7 +60,7 @@ extension ProfileFilterView: UICollectionViewDelegate {
         UIView.animate(withDuration: 0.3) {
             self.underlineView.frame.origin.x = xPosition
         }
-        print("DEBUG: 여기는 지금 FilterView입니다. 이제 곧 Profile헤더로 가서 delegate을 실행할 예정입니다.")
+        //print("DEBUG: 여기는 지금 FilterView입니다. 이제 곧 Profile헤더로 가서 delegate을 실행할 예정입니다.")
         delegate?.filterView(self, diSelect: indexPath.row)
     }
 
