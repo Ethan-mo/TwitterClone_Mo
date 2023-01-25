@@ -9,6 +9,7 @@ import UIKit
  
 /// TweetViewModel은 가지고있는 tweet, user 정보에 따라서 초기값이나 기본 환경을 세팅하는 코드들을 담고있다.
 struct TweetViewModel {
+    // MARK: - Properties
     let tweet: Tweet
     let user: User
     var profileImageUrl: URL? {
@@ -51,7 +52,15 @@ struct TweetViewModel {
         let imageName = tweet.didLike ? "like_filled" : "like"
         return UIImage(named: imageName)!
     }
+    var shouldHideReplyLabel: Bool {
+        return !tweet.isReply
+    }
+    var replyText: String {
+        guard let replyingTo = tweet.replyingTo else { return "" }
+        return "→ \(replyingTo)에게 보낸 리플"
+    }
     
+    // MARK: - Lifecycle
     init(tweet: Tweet) {
         self.tweet = tweet
         self.user = tweet.user

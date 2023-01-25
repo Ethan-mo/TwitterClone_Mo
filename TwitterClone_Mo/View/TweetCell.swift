@@ -44,7 +44,7 @@ class TweetCell: UICollectionViewCell {
        let label = UILabel()
         label.textColor = .lightGray
         label.font = UIFont.systemFont(ofSize: 12)
-        label.text = "남도일에게 작성했던 리플"
+        label.text = "제발되라얍."
         return label
     }()
     
@@ -115,18 +115,22 @@ class TweetCell: UICollectionViewCell {
         imageCaptionStack.spacing = 12
         imageCaptionStack.alignment = .leading
         
+        let stack = UIStackView(arrangedSubviews: [replyLabel, imageCaptionStack])
+        stack.axis = .vertical
+        stack.spacing = 8
+        stack.distribution = .fillProportionally
         
-        addSubview(imageCaptionStack)
-        imageCaptionStack.anchor(top:topAnchor,left:leftAnchor,right: rightAnchor,
-                     paddingTop: 8, paddingLeft: 12, paddingRight: 12)
+        addSubview(stack)
+        stack.anchor(top:topAnchor,left:leftAnchor,right: rightAnchor,
+                     paddingTop: 4, paddingLeft: 12, paddingRight: 12)
         
         let buttonStack = UIStackView(arrangedSubviews: [commentButton,retweetButton,likeButton,shareButton])
         buttonStack.axis = .horizontal
         buttonStack.spacing = 72
         addSubview(buttonStack)
         buttonStack.centerX(inView: self)
-        buttonStack.anchor(bottom: bottomAnchor,
-                           paddingBottom: 8)
+        buttonStack.anchor(top: stack.bottomAnchor ,bottom: bottomAnchor,
+                           paddingTop: 8, paddingBottom: 8)
         
         
         infoLabel.font = UIFont.systemFont(ofSize: 14)
@@ -178,5 +182,8 @@ class TweetCell: UICollectionViewCell {
         infoLabel.attributedText = viewModel.userInfoText
         likeButton.tintColor = viewModel.likeButtonTintColor
         likeButton.setImage(viewModel.likeButtonImage, for: .normal)
+        
+        replyLabel.isHidden = viewModel.shouldHideReplyLabel
+        replyLabel.text = viewModel.replyText
     }
 }
