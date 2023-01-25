@@ -133,6 +133,10 @@ extension ProfileController {
         header.delegate = self
         return header
     }
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let controller = TweetController(tweet:currentDataSource[indexPath.row])
+        navigationController?.pushViewController(controller, animated: true)
+    }
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
@@ -148,7 +152,7 @@ extension ProfileController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: view.frame.width, height: height)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: view.frame.width, height: 350)
+        return CGSize(width: view.frame.width, height: 370)
     }
 }
 // MARK: - ProfileHeaderDelegate

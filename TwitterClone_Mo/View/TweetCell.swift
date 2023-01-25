@@ -44,7 +44,6 @@ class TweetCell: UICollectionViewCell {
        let label = UILabel()
         label.textColor = .lightGray
         label.font = UIFont.systemFont(ofSize: 12)
-        label.text = "제발되라얍."
         return label
     }()
     

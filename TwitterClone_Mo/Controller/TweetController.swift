@@ -38,10 +38,18 @@ class TweetController: UICollectionViewController {
         configureCollectionView()
         fetchReplies()
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.isHidden = false
+        navigationController?.navigationBar.barStyle = .default
+    }
     
     
     // MARK: - API
     func fetchReplies() {
+        //결국 reply쪽에서 온거라면
+        print("DEBUG: Tweet ID is \(tweet.tweetID)")
+        
         TweetService.shared.fetchReplies(tweetID: tweet.tweetID) { tweets in
             self.replies = tweets
         }

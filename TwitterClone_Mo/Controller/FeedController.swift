@@ -111,7 +111,6 @@ extension FeedController {
     }
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         // feed에 있는 cell을 눌렀을 때, TweetController로 넘어가는데, 해당 파일에 넘어가는 tweet정보는, FeedController tweets안에 담긴 tweet정보를 보내주게된다.
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! TweetCell
         let controller = TweetController(tweet:tweets[indexPath.row])
         navigationController?.pushViewController(controller, animated: true)
     }
