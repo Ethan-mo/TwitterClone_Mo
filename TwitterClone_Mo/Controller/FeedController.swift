@@ -51,20 +51,25 @@ class FeedController: UICollectionViewController {
     func fetchTweets() {
         collectionView.refreshControl?.beginRefreshing()
             TweetService.shared.fetchTweets { tweets in
-                self.tweets = tweets
-                self.checkIfUserLikedTweets(tweets)
                 
                 self.tweets = tweets.sorted(by: { $0.timestamp > $1.timestamp })
+                self.checkIfUserLikedTweets(self.tweets)
+                
+                
                 
                 self.collectionView.refreshControl?.endRefreshing()
             }
     }
     
     func checkIfUserLikedTweets(_ tweets: [Tweet]) {
-        for (index, tweet) in tweets.enumerated() {
+        tweets.forEach { tweet in
             TweetService.shared.checkIfUserLikedTweet(tweet) { didLike in
                 guard didLike == true else { return }
-                self.tweets[index].didLike = didLike
+                
+                // 이전 방식과 다르게, 매번 index를 재설정해주었다.
+                if let index = self.tweets.firstIndex(where: {$0.tweetID == tweet.tweetID}) {
+                    self.tweets[index].didLike = didLike
+                }
             }
         }
     }
