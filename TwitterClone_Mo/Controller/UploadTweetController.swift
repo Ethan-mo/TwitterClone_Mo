@@ -127,7 +127,7 @@ class UploadTweetController: UIViewController {
     func configureNavigationBar() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = .white
+        UIApplication.shared.statusBarStyle = .darkContent
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
         /// 투명 반투명 관련된 ...?

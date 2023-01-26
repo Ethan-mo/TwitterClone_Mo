@@ -44,6 +44,7 @@ class FeedController: UICollectionViewController {
         super.viewWillAppear(animated)
         fetchTweets()
         collectionView.reloadData()
+        UIApplication.shared.statusBarStyle = .darkContent
         navigationController?.navigationBar.isHidden = false
     }
     

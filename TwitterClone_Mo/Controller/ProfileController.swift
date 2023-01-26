@@ -59,6 +59,7 @@ class ProfileController: UICollectionViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        UIApplication.shared.statusBarStyle = .lightContent
         navigationController?.navigationBar.isHidden = true
     }
     
@@ -170,7 +171,10 @@ extension ProfileController: ProfileHeaderDelegate {
         // 만약 현재 프로필이 내 계정이라면
         if user.isCurrentUser {
             // 향후에, 내 프로필을 수정할 수 있는 페이지를 여기에 설정한다.
-            print("DEBUG: Show edit profile controller..")
+            let controller = EditProfileController(user: user)
+            let nav = UINavigationController(rootViewController: controller)
+            nav.modalPresentationStyle = .fullScreen
+            present(nav, animated: true, completion: nil)
             return
         }
         // 선택한 계정이 팔로우 되어있을 경우, 이 버튼을 눌렀다는 것은, 이미 팔로우가 되어있는 상태에서, 한 번 더 누른 것이므로, 언팔로우이다.

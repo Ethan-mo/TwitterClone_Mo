@@ -25,6 +25,7 @@ class NotificationsController: UITableViewController{
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = false
+        UIApplication.shared.statusBarStyle = .darkContent
         navigationController?.navigationBar.barStyle = .default
     }
     // MARK: - Selector

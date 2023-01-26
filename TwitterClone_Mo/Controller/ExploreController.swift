@@ -32,6 +32,7 @@ class ExploreController: UITableViewController{
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        UIApplication.shared.statusBarStyle = .darkContent
         navigationController?.navigationBar.isHidden = false
     }
     // MARK: - API
