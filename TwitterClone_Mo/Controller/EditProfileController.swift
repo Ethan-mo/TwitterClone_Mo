@@ -9,6 +9,7 @@ import UIKit
 class EditProfileController: UITableViewController {
     // MARK: - Properties
     private let user: User
+    private lazy var headerView = EditProfileHeader(user: user)
     // MARK: - Lifecycle
     init(user: User) {
         self.user = user
@@ -22,6 +23,7 @@ class EditProfileController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationBar()
+        configureTableView()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -61,9 +63,16 @@ class EditProfileController: UITableViewController {
         navigationItem.rightBarButtonItem?.isEnabled = false
         
     }
+    func configureTableView() {
+        tableView.tableFooterView = headerView
+        headerView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 180)
+        headerView.delegate = self
+        //tableView.tableFooterView = UIView()
+    }
     
 }
-
-extension UINavigationController {
-    
+extension EditProfileController: EditProfileHeaderDelegate {
+    func didTapChangeProfilePhoto() {
+        <#code#>
+    }
 }
