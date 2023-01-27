@@ -24,6 +24,8 @@
 		A9B6A39329763909005B1F0D /* NotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6A39229763909005B1F0D /* NotificationViewModel.swift */; };
 		A9B6F50729823410000A9A43 /* EditProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6F50629823410000A9A43 /* EditProfileController.swift */; };
 		A9B6F50A2982684E000A9A43 /* EditProfileHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6F5092982684E000A9A43 /* EditProfileHeader.swift */; };
+		A9B6F50E298393E4000A9A43 /* EditProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6F50D298393E4000A9A43 /* EditProfileViewModel.swift */; };
+		A9B6F510298394E0000A9A43 /* EditProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B6F50F298394E0000A9A43 /* EditProfileCell.swift */; };
 		A9B7AC4B29757D6B00D38BC7 /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B7AC4A29757D6B00D38BC7 /* NotificationCell.swift */; };
 		A9D7D5E42924B2D000697376 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D7D5E32924B2D000697376 /* AppDelegate.swift */; };
 		A9D7D5E62924B2D000697376 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D7D5E52924B2D000697376 /* SceneDelegate.swift */; };
@@ -73,6 +75,8 @@
 		A9B6A39229763909005B1F0D /* NotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewModel.swift; sourceTree = "<group>"; };
 		A9B6F50629823410000A9A43 /* EditProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileController.swift; sourceTree = "<group>"; };
 		A9B6F5092982684E000A9A43 /* EditProfileHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileHeader.swift; sourceTree = "<group>"; };
+		A9B6F50D298393E4000A9A43 /* EditProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewModel.swift; sourceTree = "<group>"; };
+		A9B6F50F298394E0000A9A43 /* EditProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileCell.swift; sourceTree = "<group>"; };
 		A9B7AC4A29757D6B00D38BC7 /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
 		A9D7D5E02924B2D000697376 /* TwitterClone_Mo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwitterClone_Mo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9D7D5E32924B2D000697376 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -142,6 +146,7 @@
 				A96C4368294764BD00D7C283 /* ProfileFilterView.swift */,
 				A96C436A294770B900D7C283 /* ProfileFilterCell.swift */,
 				A9B6F5092982684E000A9A43 /* EditProfileHeader.swift */,
+				A9B6F50F298394E0000A9A43 /* EditProfileCell.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -232,6 +237,7 @@
 				A9A14E5029654E43008F1D7F /* UploadTweetViewModel.swift */,
 				A9A14E572966B608008F1D7F /* ActionSheetViewModel.swift */,
 				A9B6A39229763909005B1F0D /* NotificationViewModel.swift */,
+				A9B6F50D298393E4000A9A43 /* EditProfileViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -394,6 +400,7 @@
 				A9D7D6072924BCE800697376 /* ConversationsController.swift in Sources */,
 				A98DA1E129517FDD008A0557 /* UserViewModel.swift in Sources */,
 				A98DA1DF29517C70008A0557 /* UserCell.swift in Sources */,
+				A9B6F510298394E0000A9A43 /* EditProfileCell.swift in Sources */,
 				A9B6F50729823410000A9A43 /* EditProfileController.swift in Sources */,
 				A9A14E562966A479008F1D7F /* ActionSheetCell.swift in Sources */,
 				A9F47324292F072F00B4D40C /* Utilities.swift in Sources */,
@@ -414,6 +421,7 @@
 				A9F47320292E2D1F00B4D40C /* LoginController.swift in Sources */,
 				A9F4733A293F19D900B4D40C /* TweetViewModel.swift in Sources */,
 				A9F47322292E2E1300B4D40C /* RegistrationController.swift in Sources */,
+				A9B6F50E298393E4000A9A43 /* EditProfileViewModel.swift in Sources */,
 				A9D7D6092924D82300697376 /* Extension.swift in Sources */,
 				A96C4369294764BD00D7C283 /* ProfileFilterView.swift in Sources */,
 				A9F473282931F0D400B4D40C /* Constants.swift in Sources */,
