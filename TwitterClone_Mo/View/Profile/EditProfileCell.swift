@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol EditProfileCellDelegate: class {
+    func updateUserInfo(_ cell: EditProfileCell)
+}
+
 class EditProfileCell: UITableViewCell {
     
     // MARK: - Properties
@@ -14,6 +18,7 @@ class EditProfileCell: UITableViewCell {
     var viewModel: EditProfileViewModel? {
         didSet{ configure() }
     }
+    weak var delegate: EditProfileCellDelegate?
     
     let titleLabel: UILabel = {
        let label = UILabel()
@@ -35,7 +40,7 @@ class EditProfileCell: UITableViewCell {
       let tv = InputTextView()
         tv.font = UIFont.systemFont(ofSize: 14)
         tv.textColor = .twitterBlue
-        tv.placeholderLabel.text = "Bio"
+        tv.text = "Bio"
         return tv
     }()
     
@@ -50,11 +55,14 @@ class EditProfileCell: UITableViewCell {
         titleLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
         titleLabel.anchor(top:topAnchor, left: leftAnchor, paddingTop: 12, paddingLeft: 16)
         
-        addSubview(infoTextFeild)
+        contentView.addSubview(infoTextFeild)
         infoTextFeild.anchor(top: topAnchor, left: titleLabel.rightAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 4, paddingLeft: 16, paddingRight: 8)
         
-        addSubview(bioTextView)
+        contentView.addSubview(bioTextView)
         bioTextView.anchor(top: topAnchor, left: titleLabel.rightAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 4, paddingLeft: 16, paddingRight: 8)
+        
+        // NotificationCenter를 사용하면, delegate처럼, 특정 조건에 합당하면 특정 코드를 실행시 킬 수 있다.
+        NotificationCenter.default.addObserver(self, selector: #selector(handleTextInputChange), name: UITextView.textDidEndEditingNotification, object: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -62,6 +70,9 @@ class EditProfileCell: UITableViewCell {
     }
     // MARK: - Selector
     @objc func handleUpdateUserInfo() {
+        delegate?.updateUserInfo(self)
+    }
+    @objc func handleTextInputChange() {
         
     }
     

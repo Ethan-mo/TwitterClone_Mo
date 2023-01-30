@@ -7,10 +7,15 @@
 
 import UIKit
 private let reusableIdentifier = "EditProfileCell"
-class EditProfileController: UITableViewController {
+class EditProfileController: UITableViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     // MARK: - Properties
-    private let user: User
+    private var user: User
     private lazy var headerView = EditProfileHeader(user: user)
+    private let imagePicker = UIImagePickerController()
+    private var selectedImage: UIImage? {
+        didSet {headerView.profileImageView.image = selectedImage }
+    }
+    
     // MARK: - Lifecycle
     init(user: User) {
         self.user = user
@@ -23,6 +28,7 @@ class EditProfileController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureImagePicker()
         configureNavigationBar()
         configureTableView()
     }
@@ -35,9 +41,17 @@ class EditProfileController: UITableViewController {
         dismiss(animated: true)
     }
     @objc func handleDone() {
-        dismiss(animated: true)
+        updateUserData()
     }
     // MARK: - API
+    func updateUserData() {
+        UserService.shared.saveUserData(user: user) { err, ref in
+            print("DEBUG: 유저 정보가 갱신되었습니다.")
+            self.dismiss(animated: true)
+        }
+    }
+    
+    
     // MARK: - Helpers
     func configureNavigationBar() {
         navigationController?.navigationBar.barTintColor = .twitterBlue
@@ -72,20 +86,29 @@ class EditProfileController: UITableViewController {
         tableView.register(EditProfileCell.self, forCellReuseIdentifier: reusableIdentifier)
         
     }
+    func configureImagePicker() {
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = true
+    }
     
 }
+
+// MARK: - UITableViewDataSource
 extension EditProfileController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return EditProfileOptions.allCases.count
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reusableIdentifier , for: indexPath) as! EditProfileCell
+        cell.delegate = self
         
         guard let option = EditProfileOptions(rawValue: indexPath.row) else { return cell }
         cell.viewModel = EditProfileViewModel(user: user, option: option)
         return cell
     }
 }
+
+// MARK: - UITableViewDelegate
 extension EditProfileController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard let option = EditProfileOptions(rawValue: indexPath.row) else { return 0 }
@@ -93,8 +116,43 @@ extension EditProfileController {
     }
 }
 
+// MARK: - EditProfileHeaderDelegate
 extension EditProfileController: EditProfileHeaderDelegate {
     func didTapChangeProfilePhoto() {
-        print("DEBUG: 실행~")
+        present(imagePicker, animated: true)
     }
+}
+
+// MARK: - UIImagePickerControllerDelegate
+extension EditProfileController {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        print("DEUBG: 프로필 사진을 업데이트 하였습니다.")
+        
+        guard let image = info[.editedImage] as? UIImage else { return }
+        selectedImage = image
+        // 여기서 서버에 있는 user정보에 url을 변경한다. storage도 건든다는 사실을 알고가자
+        dismiss(animated: true)
+    }
+}
+// MARK: - EditProfileCellDelegate
+extension EditProfileController: EditProfileCellDelegate {
+    func updateUserInfo(_ cell: EditProfileCell) {
+        //여기서는 실질적인(서버) User Data를 수정한다.
+        guard let viewModel = cell.viewModel else { return }
+        switch viewModel.option {
+        case .fullname:
+            guard let fullname = cell.infoTextFeild.text else { return }
+            user.fullname = fullname
+        case .username:
+            guard let username = cell.infoTextFeild.text else { return }
+            user.username = username
+        case .bio:
+            user.bio = cell.bioTextView.text
+        }
+        print("DEBUG: 현재 Fullname \(user.fullname)")
+        print("DEBUG: 현재 Username \(user.username)")
+        print("DEBUG: Bio is \(user.bio)")
+
+    }
+    
 }
