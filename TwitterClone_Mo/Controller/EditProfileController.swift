@@ -7,11 +7,25 @@
 
 import UIKit
 private let reusableIdentifier = "EditProfileCell"
+
+// 내용이 변경되었을 때, 실질적인 ProfileController에 속성값도 변경시켜 주기 위해 프로토콜을 작성한다.
+protocol EditProfileControllerDelegate: class {
+    func controller(_ controller: EditProfileController, wantsToUpdate user: User)
+}
+
 class EditProfileController: UITableViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     // MARK: - Properties
     private var user: User
     private lazy var headerView = EditProfileHeader(user: user)
     private let imagePicker = UIImagePickerController()
+    weak var delegate: EditProfileControllerDelegate?
+    
+    private var userInfoChanged = false {
+        didSet{
+            navigationItem.rightBarButtonItem?.isEnabled = userInfoChanged == true ? true : false
+            }
+    }
+    
     private var selectedImage: UIImage? {
         didSet {headerView.profileImageView.image = selectedImage }
     }
@@ -47,7 +61,7 @@ class EditProfileController: UITableViewController, UIImagePickerControllerDeleg
     func updateUserData() {
         UserService.shared.saveUserData(user: user) { err, ref in
             print("DEBUG: 유저 정보가 갱신되었습니다.")
-            self.dismiss(animated: true)
+            self.delegate?.controller(self, wantsToUpdate: self.user)
         }
     }
     
@@ -138,15 +152,21 @@ extension EditProfileController {
 extension EditProfileController: EditProfileCellDelegate {
     func updateUserInfo(_ cell: EditProfileCell) {
         //여기서는 실질적인(서버) User Data를 수정한다.
+        
+            
         guard let viewModel = cell.viewModel else { return }
         switch viewModel.option {
         case .fullname:
             guard let fullname = cell.infoTextFeild.text else { return }
+            userInfoChanged = fullname != user.fullname ? true : false
             user.fullname = fullname
         case .username:
             guard let username = cell.infoTextFeild.text else { return }
+            userInfoChanged = username != user.username ? true : false
             user.username = username
         case .bio:
+            guard let userBio = user.bio else { return }
+            userInfoChanged = userBio != user.bio ? true : false
             user.bio = cell.bioTextView.text
         }
         print("DEBUG: 현재 Fullname \(user.fullname)")

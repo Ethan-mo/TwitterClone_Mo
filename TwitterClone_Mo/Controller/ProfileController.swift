@@ -12,7 +12,11 @@ private let headerIdentifire = "ProfileHeader"
 
 class ProfileController: UICollectionViewController {
     // MARK: - Properties
-    private var user: User
+    private var user: User {
+        didSet{
+            fetchTweets()
+        }
+    }
     
     private var selectedFilter: ProfileFilterOptions = .tweets{
         didSet{collectionView.reloadData()}
@@ -172,6 +176,7 @@ extension ProfileController: ProfileHeaderDelegate {
         if user.isCurrentUser {
             // 향후에, 내 프로필을 수정할 수 있는 페이지를 여기에 설정한다.
             let controller = EditProfileController(user: user)
+            controller.delegate = self
             let nav = UINavigationController(rootViewController: controller)
             nav.modalPresentationStyle = .fullScreen
             present(nav, animated: true, completion: nil)
@@ -190,5 +195,13 @@ extension ProfileController: ProfileHeaderDelegate {
                 NotificationService.shard.uploadNotification(type: .follow, user: self.user)
             }
         }
+    }
+}
+
+// MARK: - EditProfileDelegate
+extension ProfileController: EditProfileControllerDelegate {
+    func controller(_ controller: EditProfileController, wantsToUpdate user: User) {
+        controller.dismiss(animated: true)
+        self.user = user
     }
 }
