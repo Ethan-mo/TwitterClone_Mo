@@ -59,7 +59,7 @@ class EditProfileCell: UITableViewCell {
         infoTextFeild.anchor(top: topAnchor, left: titleLabel.rightAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 4, paddingLeft: 16, paddingRight: 8)
         
         contentView.addSubview(bioTextView)
-        bioTextView.anchor(top: topAnchor, left: titleLabel.rightAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 4, paddingLeft: 16, paddingRight: 8)
+        bioTextView.anchor(top: topAnchor, left: titleLabel.rightAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 4, paddingLeft: 14, paddingRight: 8)
         
         // NotificationCenter를 사용하면, delegate처럼, 특정 조건에 합당하면 특정 코드를 실행시 킬 수 있다.
         NotificationCenter.default.addObserver(self, selector: #selector(handleTextInputChange), name: UITextView.textDidEndEditingNotification, object: nil)
@@ -70,10 +70,10 @@ class EditProfileCell: UITableViewCell {
     }
     // MARK: - Selector
     @objc func handleUpdateUserInfo() {
-        delegate?.updateUserInfo(self)
+        
     }
     @objc func handleTextInputChange() {
-        
+        delegate?.updateUserInfo(self)
     }
     
     // MARK: - Helpers
@@ -87,6 +87,7 @@ class EditProfileCell: UITableViewCell {
         titleLabel.text = viewModel.titleText
         infoTextFeild.text = viewModel.optionValue
         bioTextView.text = viewModel.optionValue
+        bioTextView.placeholderLabel.isHidden = viewModel.shouldHidePlaceHolderLabel
 
     }
 }

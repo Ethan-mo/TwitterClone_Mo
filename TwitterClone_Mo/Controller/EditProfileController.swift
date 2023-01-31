@@ -20,11 +20,11 @@ class EditProfileController: UITableViewController, UIImagePickerControllerDeleg
     private let imagePicker = UIImagePickerController()
     weak var delegate: EditProfileControllerDelegate?
     
-    private var userInfoChanged = false {
-        didSet{
-            navigationItem.rightBarButtonItem?.isEnabled = userInfoChanged == true ? true : false
-            }
+    private var imageChanged: Bool {
+        return selectedImage != nil
     }
+    
+    private var userInfoChanged = false
     
     private var selectedImage: UIImage? {
         didSet {headerView.profileImageView.image = selectedImage }
@@ -55,16 +55,44 @@ class EditProfileController: UITableViewController, UIImagePickerControllerDeleg
         dismiss(animated: true)
     }
     @objc func handleDone() {
+        view.endEditing(true)
+        guard imageChanged || userInfoChanged else { return }
         updateUserData()
     }
     // MARK: - API
+    /// 강의에서와는 다르게, 하나의 함수가 하나의목적을 갖도록 변경하였다.
     func updateUserData() {
+        if imageChanged && userInfoChanged {
+            updateUserInfo()
+            updateProfileImage()
+        }
+        
+        if imageChanged && !userInfoChanged {
+            updateProfileImage()
+        }
+        
+        if !imageChanged && userInfoChanged {
+            updateUserInfo()
+        }
+        if !imageChanged && !userInfoChanged {
+            print("DEBUG: 아무 정보도 변경되지 않았습니다.")
+        }
+    }
+    func updateUserInfo() {
         UserService.shared.saveUserData(user: user) { err, ref in
             print("DEBUG: 유저 정보가 갱신되었습니다.")
             self.delegate?.controller(self, wantsToUpdate: self.user)
         }
     }
     
+    func updateProfileImage() {
+        guard let image = selectedImage else { return }
+        UserService.shared.updateProfileImage(image: image) { imageUrlString in
+            print("DEBUG: 유저의 프로필 사진이 갱신되었습니다.")
+            self.user.profileImageUrl = URL(string: imageUrlString)
+            self.delegate?.controller(self, wantsToUpdate: self.user)
+        }
+    }
     
     // MARK: - Helpers
     func configureNavigationBar() {
@@ -89,7 +117,6 @@ class EditProfileController: UITableViewController, UIImagePickerControllerDeleg
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(handleCancel))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(handleDone))
-        navigationItem.rightBarButtonItem?.isEnabled = false
         
     }
     func configureTableView() {
@@ -157,18 +184,22 @@ extension EditProfileController: EditProfileCellDelegate {
         guard let viewModel = cell.viewModel else { return }
         switch viewModel.option {
         case .fullname:
+            print("DEBUG: fullname에 들어있는 fullname값은~\(cell.infoTextFeild.text)")
             guard let fullname = cell.infoTextFeild.text else { return }
             userInfoChanged = fullname != user.fullname ? true : false
             user.fullname = fullname
         case .username:
+            print("DEBUG: username에 들어있는 username값은~\(cell.infoTextFeild.text)")
             guard let username = cell.infoTextFeild.text else { return }
             userInfoChanged = username != user.username ? true : false
             user.username = username
         case .bio:
-            guard let userBio = user.bio else { return }
+            print("DEBUG: cell에 들어있는 bio값은~\(cell.bioTextView.text)")
+            guard let userBio = cell.bioTextView.text else { return }
             userInfoChanged = userBio != user.bio ? true : false
             user.bio = cell.bioTextView.text
         }
+        
         print("DEBUG: 현재 Fullname \(user.fullname)")
         print("DEBUG: 현재 Username \(user.username)")
         print("DEBUG: Bio is \(user.bio)")

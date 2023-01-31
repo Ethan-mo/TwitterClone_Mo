@@ -41,7 +41,6 @@ class InputTextView: UITextView {
     }
     // MARK: - Selectors
     @objc func handleTextInputChange() {
-        print("DEBUG: Hide and show placeholder")
         placeholderLabel.isHidden = !text.isEmpty
     }
 }
