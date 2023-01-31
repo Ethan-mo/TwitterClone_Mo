@@ -83,7 +83,6 @@ class ProfileHeader: UICollectionReusableView {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
         label.numberOfLines = 3
-        label.text = "이 편지는 영국으로부터 시작되어, 하루에 3명에게 같은 내용의 편지를 전달해야합니다. 그렇지 않을 경우, 감당할 수 없는 행복한 일들이 가득할껍니다."
         return label
     }()
     private let divlineView: UIView = {
@@ -144,7 +143,7 @@ class ProfileHeader: UICollectionReusableView {
         followStack.distribution = .fillEqually
         
         addSubview(followStack)
-        followStack.anchor(top:userDetailStack.bottomAnchor, left: leftAnchor, paddingTop: 8, paddingLeft: 12)
+        followStack.anchor( left: leftAnchor , bottom: bottomAnchor, paddingLeft: 12, paddingBottom: 55)
             
         
         addSubview(filterBar)
@@ -191,6 +190,7 @@ class ProfileHeader: UICollectionReusableView {
         profileImageView.sd_setImage(with: user.profileImageUrl)
         fullnameLabel.text = user.fullname
         usernameLabel.text = viewModel.userNameText
+        bioLabel.text = viewModel.userBioText
         
     }
 }

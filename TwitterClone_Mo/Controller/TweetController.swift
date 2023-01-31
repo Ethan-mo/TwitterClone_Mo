@@ -56,12 +56,6 @@ class TweetController: UICollectionViewController {
             self.replies = tweets
         }
     }
-    func fetchUser(username: String) {
-        UserService.shared.fetchUser(withUsername: username) { user in
-            let controller = ProfileController(user: user)
-            self.navigationController?.pushViewController(controller, animated: true)
-        }
-    }
     
     // MARK: - Helper
     func configureCollectionView() {
@@ -113,11 +107,19 @@ extension TweetController: UICollectionViewDelegateFlowLayout {
 // MARK: - TweetCellDelegate
 extension TweetController: TweetCellDelegate {
     func handleMentionTapped(_ cell: TweetCell, username: String) {
-        fetchUser(username: username)
+        print("DEBUG: TweetCell쪽에서 접근한 멘션")
+        UserService.shared.fetchUser(withUsername: username) { user in
+            let controller = ProfileController(user: user)
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
     }
     
     func handleHashTagTapped(_ cell: TweetCell, username: String) {
-        fetchUser(username: username)
+        print("DEBUG: TweetCell쪽에서 접근한 태그")
+        UserService.shared.fetchUser(withUsername: username) { user in
+            let controller = ProfileController(user: user)
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
     }
     
     func handleLikeTapped(_ cell: TweetCell) {
@@ -149,11 +151,19 @@ extension TweetController: TweetCellDelegate {
 // MARK: - TweetHeaderDelegate
 extension TweetController: TweetHeaderDelegate {
     func handleMentionTapped(_ header: TweetHeader, username: String) {
-        fetchUser(username: username)
+        print("DEBUG: TweetHeader쪽에서 접근한 멘션")
+        UserService.shared.fetchUser(withUsername: username) { user in
+            let controller = ProfileController(user: user)
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
     }
     
     func handleHashTagTapped(_ header: TweetHeader, username: String) {
-        fetchUser(username: username)
+        print("DEBUG: TweetHeader쪽에서 접근한 태그")
+        UserService.shared.fetchUser(withUsername: username) { user in
+            let controller = ProfileController(user: user)
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
     }
     
     //이제 여기서 작업하기를, header에 있는 tweet값을 변경시켜 주어야 한다.
@@ -168,7 +178,8 @@ extension TweetController: TweetHeaderDelegate {
             
             // 아래 guard문은 좋아요가 [ 비활성화 상태 > 활성화 상태 ] 일때만, 실행하기 위해서 작성한다.
             guard header.tweet?.didLike ?? false else { return }
-            NotificationService.shard.uploadNotification(type: .like, tweet: header.tweet)
+            guard let tweet = header.tweet else { return }
+            NotificationService.shard.uploadNotification(toUser: tweet.user, type: .like, tweetID: tweet.tweetID)
         }
         
     }

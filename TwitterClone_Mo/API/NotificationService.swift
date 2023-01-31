@@ -9,23 +9,35 @@ import Foundation
 import Firebase
 
 struct NotificationService {
-    static let shard = NotificationService()
     
-    func uploadNotification(type:NotificationType, tweet: Tweet? = nil, user: User? = nil) {
-        print("DEBUG: 이렇게 알람이 가는 겁니다.")
+    static let shard = NotificationService()
+    func uploadNotification(toUser user: User, type:NotificationType, tweetID: String? = nil) {
         guard let uid = Auth.auth().currentUser?.uid else { return }
-        
         var values: [String: Any] = ["timestamp": Int(NSDate().timeIntervalSince1970),
                                      "uid": uid,
                                      "type": type.rawValue]
-        if let tweet = tweet {
-            values["tweetID"] = tweet.tweetID
-            REF_NOTIFICATION.child(tweet.user.uid).childByAutoId().updateChildValues(values)
-        }
-        if let user = user {
-            REF_NOTIFICATION.child(user.uid).childByAutoId().updateChildValues(values)
-        }
+        if let tweetID = tweetID { values["tweetID"] = tweetID }
+        REF_NOTIFICATION.child(user.uid).childByAutoId().updateChildValues(values)
     }
+///    // 매개변수로 1. 알람 타입, 2. 트윗정보, 3. 유저정보
+//    func uploadNotification2(type:NotificationType, tweet: Tweet? = nil, user: User? = nil) {
+///        // 현재 접속해있는 유저의 uid불러오기
+//        guard let uid = Auth.auth().currentUser?.uid else { return }
+///        // 알람의 기본 내용(values)을 세팅해주는 작업
+//        var values: [String: Any] = ["timestamp": Int(NSDate().timeIntervalSince1970),
+//                                     "uid": uid,
+//                                     "type": type.rawValue]
+///        // 만약 tweet의 내용이 있을 경우, values값에 "tweetID"도 추가해준다.
+//        if let tweet = tweet {
+//            values["tweetID"] = tweet.tweetID
+///            // user정보도 있고, uid도 있지만, 굳이 tweet에 있는 user의 uid를 구해주었다.
+//            REF_NOTIFICATION.child(tweet.user.uid).childByAutoId().updateChildValues(values)
+//        }
+//        if let user = user {
+//            REF_NOTIFICATION.child(user.uid).childByAutoId().updateChildValues(values)
+//        }
+//    }
+    
     func fetchNotifications(completion: @escaping([Notification]) -> Void) {
         var notifications = [Notification]()
         guard let uid = Auth.auth().currentUser?.uid else { return }

@@ -83,7 +83,7 @@ class UploadTweetController: UIViewController {
                 return
             }
             if case .reply(let tweet) = self.config {
-                NotificationService.shard.uploadNotification(type: .reply, tweet: tweet)
+                NotificationService.shard.uploadNotification(toUser: tweet.user, type: .reply, tweetID: tweet.tweetID)
             }
             
             print("DEBUG: Tweet did upload to database...")

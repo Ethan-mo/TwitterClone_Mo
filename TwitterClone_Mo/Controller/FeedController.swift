@@ -58,12 +58,6 @@ class FeedController: UICollectionViewController {
                 self.collectionView.refreshControl?.endRefreshing()
             }
     }
-    func fetchUser(username: String) {
-        UserService.shared.fetchUser(withUsername: username) { user in
-            let controller = ProfileController(user: user)
-            self.navigationController?.pushViewController(controller, animated: true)
-        }
-    }
     
     func checkIfUserLikedTweets(_ tweets: [Tweet]) {
         tweets.forEach { tweet in
@@ -150,11 +144,17 @@ extension FeedController: UICollectionViewDelegateFlowLayout {
 }
 extension FeedController: TweetCellDelegate {
     func handleMentionTapped(_ cell: TweetCell, username: String) {
-        fetchUser(username: username)
+        UserService.shared.fetchUser(withUsername: username) { user in
+            let controller = ProfileController(user: user)
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
     }
     
     func handleHashTagTapped(_ cell: TweetCell, username: String) {
-        fetchUser(username: username)
+        UserService.shared.fetchUser(withUsername: username) { user in
+            let controller = ProfileController(user: user)
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
     }
     func handleReplyTapped(_ cell: TweetCell) {
         guard let tweet = cell.tweet else { return }
@@ -186,7 +186,7 @@ extension FeedController: TweetCellDelegate {
             }
             
             guard !tweet.didLike else { return }
-            NotificationService.shard.uploadNotification(type: .like, tweet: cell.tweet) // 강의에서는 cell.tweet을 tweet대신 사용했는데, 사실 상관없다.
+            NotificationService.shard.uploadNotification(toUser: tweet.user, type: .like, tweetID: tweet.tweetID) // 강의에서는 cell.tweet을 tweet대신 사용했는데, 사실 상관없다.
             // uploadNotification()메서드에서는 사실상 tweet에 있는 user정보와 tweet.tweetID만 필요로 하고, 이를 DB에 저장하기 때문에, like값과 didlike값이 중요하지 않은 상황에서 딱히 cell.tweet을 안써도 된다.
         }
     }
