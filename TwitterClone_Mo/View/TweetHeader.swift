@@ -11,6 +11,8 @@ import ActiveLabel
 protocol TweetHeaderDelegate: class {
     func showActionSheet()
     func handleLikeTapped(_ header:TweetHeader)
+    func handleMentionTapped(_ header: TweetHeader, username: String)
+    func handleHashTagTapped(_ header: TweetHeader, username: String)
 }
 
 class TweetHeader: UICollectionReusableView {
@@ -249,11 +251,13 @@ class TweetHeader: UICollectionReusableView {
     func configureMentionHandler() {
         captionLabel.handleMentionTap { mention in
             print("DEBUG: 멘션한 \(mention)(을)를 선택하였습니다.")
+            self.delegate?.handleMentionTapped(self,username: mention)
         }
     }
     func configureHashTagHandler() {
         captionLabel.handleHashtagTap { hashTag in
             print("DEBUG: 태그한 \(hashTag)(을)를 선택하였습니다.")
+            self.delegate?.handleHashTagTapped(self, username: hashTag)
         }
     }
 }

@@ -54,12 +54,15 @@ class FeedController: UICollectionViewController {
             TweetService.shared.fetchTweets { tweets in
                 
                 self.tweets = tweets.sorted(by: { $0.timestamp > $1.timestamp })
-                self.checkIfUserLikedTweets(self.tweets)
-                
-                
-                
+                self.checkIfUserLikedTweets(self.tweets)  
                 self.collectionView.refreshControl?.endRefreshing()
             }
+    }
+    func fetchUser(username: String) {
+        UserService.shared.fetchUser(withUsername: username) { user in
+            let controller = ProfileController(user: user)
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
     }
     
     func checkIfUserLikedTweets(_ tweets: [Tweet]) {
@@ -146,6 +149,13 @@ extension FeedController: UICollectionViewDelegateFlowLayout {
     }
 }
 extension FeedController: TweetCellDelegate {
+    func handleMentionTapped(_ cell: TweetCell, username: String) {
+        fetchUser(username: username)
+    }
+    
+    func handleHashTagTapped(_ cell: TweetCell, username: String) {
+        fetchUser(username: username)
+    }
     func handleReplyTapped(_ cell: TweetCell) {
         guard let tweet = cell.tweet else { return }
         let controller = UploadTweetController(user: tweet.user, config: .reply(tweet))

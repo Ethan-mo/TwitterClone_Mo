@@ -13,6 +13,8 @@ protocol TweetCellDelegate: class {
     func handleProfileImageTapped(_ cell: TweetCell)
     func handleReplyTapped(_ cell: TweetCell)
     func handleLikeTapped(_ cell: TweetCell)
+    func handleMentionTapped(_ cell: TweetCell, username: String)
+    func handleHashTagTapped(_ cell: TweetCell, username: String)
 }
 
 class TweetCell: UICollectionViewCell {
@@ -194,11 +196,15 @@ class TweetCell: UICollectionViewCell {
     func configureMentionHandler() {
         captionLabel.handleMentionTap { mention in
             print("DEBUG: 멘션한 \(mention)(을)를 선택하였습니다.")
+            // 연결되어있는 controller에서 pushController를 통해 다른 페이지로 넘어가야한다.
+            self.delegate?.handleMentionTapped(self,username: mention)
         }
     }
     func configureHashTagHandler() {
         captionLabel.handleHashtagTap { hashTag in
             print("DEBUG: 태그한 \(hashTag)(을)를 선택하였습니다.")
+            // 연결되어있는 controller에서 pushController를 통해 다른 페이지로 넘어가야한다.
+            self.delegate?.handleHashTagTapped(self, username: hashTag)
         }
     }
 }

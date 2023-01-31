@@ -40,6 +40,8 @@ class TweetController: UICollectionViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        // .darkContent를 해주어야 statusBar가 정상적으로 표기된다.
+        UIApplication.shared.statusBarStyle = .darkContent
         navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.barStyle = .default
     }
@@ -52,6 +54,12 @@ class TweetController: UICollectionViewController {
         
         TweetService.shared.fetchReplies(tweetID: tweet.tweetID) { tweets in
             self.replies = tweets
+        }
+    }
+    func fetchUser(username: String) {
+        UserService.shared.fetchUser(withUsername: username) { user in
+            let controller = ProfileController(user: user)
+            self.navigationController?.pushViewController(controller, animated: true)
         }
     }
     
@@ -104,6 +112,14 @@ extension TweetController: UICollectionViewDelegateFlowLayout {
 
 // MARK: - TweetCellDelegate
 extension TweetController: TweetCellDelegate {
+    func handleMentionTapped(_ cell: TweetCell, username: String) {
+        fetchUser(username: username)
+    }
+    
+    func handleHashTagTapped(_ cell: TweetCell, username: String) {
+        fetchUser(username: username)
+    }
+    
     func handleLikeTapped(_ cell: TweetCell) {
         guard let tweet = cell.tweet else { return }
         TweetService.shared.likeTweet(tweet: tweet) { (err,ref) in
@@ -132,6 +148,14 @@ extension TweetController: TweetCellDelegate {
 }
 // MARK: - TweetHeaderDelegate
 extension TweetController: TweetHeaderDelegate {
+    func handleMentionTapped(_ header: TweetHeader, username: String) {
+        fetchUser(username: username)
+    }
+    
+    func handleHashTagTapped(_ header: TweetHeader, username: String) {
+        fetchUser(username: username)
+    }
+    
     //이제 여기서 작업하기를, header에 있는 tweet값을 변경시켜 주어야 한다.
     // tweetHeader에서 [좋아요]버튼을 눌렀을 때 생기는 일
     func handleLikeTapped(_ header:TweetHeader) {

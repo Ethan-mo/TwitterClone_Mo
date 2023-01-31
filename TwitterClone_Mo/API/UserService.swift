@@ -21,6 +21,18 @@ struct UserService {
             completion(user)
         }
     }
+    /// mention이나 hashtag 시에 사용자를 불러올 때, username을 통해 사용자 정보를 가져오는 API
+    func fetchUser(withUsername username: String, completion: @escaping(User) -> Void) {
+        // username을 가지고 uid를 가져와야한다. 그리고 해당. uid를 통해 fetchUser() API를 사용하여 user정보를 불러와야한다.
+        REF_USER_USERNAMES.child(username).observeSingleEvent(of: .value) { snapshot in
+            if snapshot.key == username {
+                guard let uid = snapshot.value as? String else { return }
+                fetchUser(uid: uid) { user in
+                    completion(user)
+                }
+            }
+        }
+    }
     /// DB에 있는 모든 user의 정보를 호출할 때 사용하는 API
     func fetchUsers(completion: @escaping([User]) -> Void) {
         var users = [User]()
@@ -97,9 +109,5 @@ struct UserService {
                       "username": user.username,
                       "bio": user.bio ?? ""]
         REF_USERS.child(uid).updateChildValues(values, withCompletionBlock: completion)
-    }
-    
-    func fetchUser(withUsername username: String, completion: @escaping(User) -> Void) {
-        
     }
 }
