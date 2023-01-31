@@ -97,6 +97,9 @@ struct UserService {
                       "username": user.username,
                       "bio": user.bio ?? ""]
         REF_USERS.child(uid).updateChildValues(values, withCompletionBlock: completion)
+    }
+    
+    func fetchUser(withUsername username: String, completion: @escaping(User) -> Void) {
         
     }
 }

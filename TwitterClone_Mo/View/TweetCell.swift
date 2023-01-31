@@ -7,6 +7,7 @@
 
 import UIKit
 import SDWebImage
+import ActiveLabel
 
 protocol TweetCellDelegate: class {
     func handleProfileImageTapped(_ cell: TweetCell)
@@ -40,17 +41,20 @@ class TweetCell: UICollectionViewCell {
         return iv
     }()
     
-    private let replyLabel: UILabel = {
-       let label = UILabel()
+    private let replyLabel: ActiveLabel = {
+       let label = ActiveLabel()
         label.textColor = .lightGray
         label.font = UIFont.systemFont(ofSize: 12)
+        label.mentionColor = .twitterBlue
         return label
     }()
     
-    private let captionLabel: UILabel = {
-       let label = UILabel()
+    private let captionLabel: ActiveLabel = {
+       let label = ActiveLabel()
         label.font = UIFont.systemFont(ofSize: 14)
         label.numberOfLines = 0
+        label.mentionColor = .twitterBlue
+        label.hashtagColor = .twitterBlue
         label.text = "Some test caption"
         return label
     }()
@@ -139,7 +143,8 @@ class TweetCell: UICollectionViewCell {
         addSubview(underlineView)
         underlineView.anchor(left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, height: 1)
         
-        
+        configureMentionHandler()
+        configureHashTagHandler()
     }
     
     required init?(coder: NSCoder) {
@@ -184,5 +189,16 @@ class TweetCell: UICollectionViewCell {
         
         replyLabel.isHidden = viewModel.shouldHideReplyLabel
         replyLabel.text = viewModel.replyText
+    }
+    
+    func configureMentionHandler() {
+        captionLabel.handleMentionTap { mention in
+            print("DEBUG: 멘션한 \(mention)(을)를 선택하였습니다.")
+        }
+    }
+    func configureHashTagHandler() {
+        captionLabel.handleHashtagTap { hashTag in
+            print("DEBUG: 태그한 \(hashTag)(을)를 선택하였습니다.")
+        }
     }
 }

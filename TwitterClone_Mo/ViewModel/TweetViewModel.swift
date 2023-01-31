@@ -57,7 +57,7 @@ struct TweetViewModel {
     }
     var replyText: String {
         guard let replyingTo = tweet.replyingTo else { return "" }
-        return "→ \(replyingTo)에게 보낸 리플"
+        return "→ @\(replyingTo) 에게 보낸 댓글"
     }
     
     // MARK: - Lifecycle

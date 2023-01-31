@@ -59,6 +59,7 @@ struct AuthService{
                                   "profileImageUrl":profileImageUrl]
                     // 2) 회원가입 인증으로 생성된 계정의 uid를 불러오고, 해당 uid를 가진 User Data에 접근하는 Reference인스턴스를 통해 Data를 저장한다.
                     REF_USERS.child(uid).updateChildValues(values, withCompletionBlock: completion)
+                    REF_USER_USERNAMES.updateChildValues([username:uid])
                 }
             }
         }

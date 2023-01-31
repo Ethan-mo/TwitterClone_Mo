@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ActiveLabel
 
 protocol TweetHeaderDelegate: class {
     func showActionSheet()
@@ -51,10 +52,12 @@ class TweetHeader: UICollectionReusableView {
         return label
     }()
     
-    private let captionLabel: UILabel = {
-        let label = UILabel()
+    private let captionLabel: ActiveLabel = {
+        let label = ActiveLabel()
         label.font = UIFont.systemFont(ofSize: 22)
         label.numberOfLines = 0
+        label.mentionColor = .twitterBlue
+        label.hashtagColor = .twitterBlue
         label.text = "이 편지는 영국으로부터 시작되어...."
         return label
     }()
@@ -75,10 +78,11 @@ class TweetHeader: UICollectionReusableView {
         button.addTarget(self, action: #selector(showActionSheet), for: .touchUpInside)
         return button
     }()
-    private let replyLabel: UILabel = {
-       let label = UILabel()
+    private let replyLabel: ActiveLabel = {
+       let label = ActiveLabel()
         label.textColor = .lightGray
         label.font = UIFont.systemFont(ofSize: 12)
+        label.mentionColor = .twitterBlue
         return label
     }()
     
@@ -183,6 +187,8 @@ class TweetHeader: UICollectionReusableView {
         buttonStack.centerX(inView: self)
         buttonStack.anchor(top:statsView.bottomAnchor, paddingTop: 16)
 
+        configureMentionHandler()
+        configureHashTagHandler()
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -239,5 +245,15 @@ class TweetHeader: UICollectionReusableView {
         button.tintColor = .darkGray
         button.setDimensions(width: 20, height: 20)
         return button
+    }
+    func configureMentionHandler() {
+        captionLabel.handleMentionTap { mention in
+            print("DEBUG: 멘션한 \(mention)(을)를 선택하였습니다.")
+        }
+    }
+    func configureHashTagHandler() {
+        captionLabel.handleHashtagTap { hashTag in
+            print("DEBUG: 태그한 \(hashTag)(을)를 선택하였습니다.")
+        }
     }
 }
