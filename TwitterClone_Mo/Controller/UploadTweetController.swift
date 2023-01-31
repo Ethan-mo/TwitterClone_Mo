@@ -7,6 +7,7 @@
 
 import UIKit
 import SDWebImage
+import ActiveLabel
 
 class UploadTweetController: UIViewController {
     // MARK: - Properties
@@ -33,11 +34,11 @@ class UploadTweetController: UIViewController {
         return button
     }()
     // replyLabel은 UploadTweetController에서, reply모드일떄만 활성화하는 Label이다.
-    private lazy var replyLabel: UILabel = {
-        let label = UILabel()
+    private lazy var replyLabel: ActiveLabel = {
+        let label = ActiveLabel()
         label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = .lightGray
-        label.text = "replying to @spiderman"
+        label.mentionColor = .twitterBlue
         label.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
         return label
     }()
@@ -67,6 +68,7 @@ class UploadTweetController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        configureMentionHandler()
     }
     
     // MARK: - Selectors
@@ -135,5 +137,10 @@ class UploadTweetController: UIViewController {
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(handleCancel))
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: actionButton)
+    }
+    func configureMentionHandler() {
+        replyLabel.handleMentionTap { mention in
+            print("#DEBUG: 멘션된 사용자인 \(mention)(이)가 클릭되었습니다.")
+        }
     }
 }
