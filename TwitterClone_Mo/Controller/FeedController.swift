@@ -11,7 +11,7 @@ import SDWebImage
 private let reuseIdentifier = "tweetCell"
 
 protocol FeedControllerDelegate : class {
-    func tappedImageView()
+    func remoteLogout()
 }
 
 class FeedController: UICollectionViewController {
@@ -73,7 +73,8 @@ class FeedController: UICollectionViewController {
     }
     // MARK: - Selector
     @objc func handleProfileImage() {
-        delegate?.tappedImageView()
+        // 메뉴가 나오도록 차후 구현 예정
+        print("DEBUG: 이미지가 선택되었습니다.")
     }
     @objc func handleRefresh() {
         fetchTweets()
@@ -167,6 +168,7 @@ extension FeedController: TweetCellDelegate {
     func handleProfileImageTapped(_ cell: TweetCell) {
         guard let user = cell.tweet?.user else { return }
         let controller = ProfileController(user: user)
+        controller.delegate = self
         self.navigationController?.pushViewController(controller, animated: true)
     }
     func handleLikeTapped(_ cell: TweetCell) {
@@ -191,4 +193,10 @@ extension FeedController: TweetCellDelegate {
         }
     }
 
+}
+
+extension FeedController: ProfileControllerDelegate {
+    func remoteLogout() {
+        delegate?.remoteLogout()
+    }
 }

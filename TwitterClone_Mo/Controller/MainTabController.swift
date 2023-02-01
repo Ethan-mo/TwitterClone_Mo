@@ -141,8 +141,9 @@ class MainTabController: UITabBarController {
 
 }
 extension MainTabController: FeedControllerDelegate {
-    func tappedImageView() {
+    func remoteLogout() {
         logUserOut()
         authenticateUserAndConfigureUI()
     }
 }
+

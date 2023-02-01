@@ -11,12 +11,14 @@ private let reusableIdentifier = "EditProfileCell"
 // 내용이 변경되었을 때, 실질적인 ProfileController에 속성값도 변경시켜 주기 위해 프로토콜을 작성한다.
 protocol EditProfileControllerDelegate: class {
     func controller(_ controller: EditProfileController, wantsToUpdate user: User)
+    func popToProfileController()
 }
 
 class EditProfileController: UITableViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     // MARK: - Properties
     private var user: User
     private lazy var headerView = EditProfileHeader(user: user)
+    private let footerView = EditProfileFooter()
     private let imagePicker = UIImagePickerController()
     weak var delegate: EditProfileControllerDelegate?
     
@@ -120,12 +122,17 @@ class EditProfileController: UITableViewController, UIImagePickerControllerDeleg
         
     }
     func configureTableView() {
+        // Header에 대한 설정
         tableView.tableHeaderView = headerView
         headerView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 180)
-        tableView.tableFooterView = UIView()
         headerView.delegate = self
-        tableView.register(EditProfileCell.self, forCellReuseIdentifier: reusableIdentifier)
         
+        // footer에 대한 설정
+        footerView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 400)
+        tableView.tableFooterView = footerView
+        footerView.delegate = self
+        
+        tableView.register(EditProfileCell.self, forCellReuseIdentifier: reusableIdentifier)
     }
     func configureImagePicker() {
         imagePicker.delegate = self
@@ -154,6 +161,12 @@ extension EditProfileController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard let option = EditProfileOptions(rawValue: indexPath.row) else { return 0 }
         return option == .bio ? 100 : 48
+    }
+}
+
+extension EditProfileController {
+    override func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
+        return CGFloat.leastNormalMagnitude
     }
 }
 
@@ -207,3 +220,22 @@ extension EditProfileController: EditProfileCellDelegate {
     }
     
 }
+
+// MARK: - EditProfileFooterDelegate
+extension EditProfileController: EditProfileFooterDelegate {
+    func handleLogoutButtonTapped() {
+        print("DEBUG: 루트뷰로 이동합니다.")
+        
+        let alert = UIAlertController(title: nil, message: "로그아웃을 원하시나요?", preferredStyle: .actionSheet)
+        
+        alert.addAction(UIAlertAction(title: "로그아웃", style: .destructive, handler: { _ in
+            self.dismiss(animated: true)
+            self.delegate?.popToProfileController()
+        }))
+        
+        alert.addAction(UIAlertAction(title: "취 소", style: .cancel))
+        present(alert, animated: true)
+        
+    }
+}
+

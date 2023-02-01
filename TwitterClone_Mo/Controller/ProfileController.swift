@@ -10,8 +10,14 @@ import UIKit
 private let reuseIdentifier = "TweetCell"
 private let headerIdentifire = "ProfileHeader"
 
+protocol ProfileControllerDelegate: class {
+    func remoteLogout()
+}
+
 class ProfileController: UICollectionViewController {
     // MARK: - Properties
+    weak var delegate: ProfileControllerDelegate?
+    
     private var user: User {
         didSet{
             fetchTweets()
@@ -209,5 +215,10 @@ extension ProfileController: EditProfileControllerDelegate {
     func controller(_ controller: EditProfileController, wantsToUpdate user: User) {
         controller.dismiss(animated: true)
         self.user = user
+    }
+    func popToProfileController() {
+        print("DEBUG: 현재 여기는 ProfileController")
+        navigationController?.popToRootViewController(animated: true)
+        delegate?.remoteLogout()
     }
 }
