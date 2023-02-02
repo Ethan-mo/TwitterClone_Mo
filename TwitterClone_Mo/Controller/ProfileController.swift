@@ -218,7 +218,7 @@ extension ProfileController: EditProfileControllerDelegate {
     }
     func popToProfileController() {
         print("DEBUG: 현재 여기는 ProfileController")
-        navigationController?.popToRootViewController(animated: true)
+        navigationController?.popViewController(animated: true)
         delegate?.remoteLogout()
     }
 }

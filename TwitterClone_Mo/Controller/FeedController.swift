@@ -75,6 +75,10 @@ class FeedController: UICollectionViewController {
     @objc func handleProfileImage() {
         // 메뉴가 나오도록 차후 구현 예정
         print("DEBUG: 이미지가 선택되었습니다.")
+        guard let user = user else { return }        
+        let controller = ProfileController(user: user)
+        controller.delegate = self
+        navigationController?.pushViewController(controller, animated: true)
     }
     @objc func handleRefresh() {
         fetchTweets()
@@ -103,12 +107,13 @@ class FeedController: UICollectionViewController {
          iv.setDimensions(width: 32, height: 32)
          iv.layer.cornerRadius = 32 / 2
          iv.layer.masksToBounds = true
+        iv.sd_setImage(with: user.profileImageUrl)
          
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImage))
          iv.addGestureRecognizer(tap)
          iv.isUserInteractionEnabled = true
-         iv.sd_setImage(with: user.profileImageUrl)
+         
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: iv)
     }
 }
@@ -197,6 +202,7 @@ extension FeedController: TweetCellDelegate {
 
 extension FeedController: ProfileControllerDelegate {
     func remoteLogout() {
+        print("DEBUG: remoteLogout()이 실행됨")
         delegate?.remoteLogout()
     }
 }
