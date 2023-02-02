@@ -7,6 +7,7 @@
 
 import UIKit
 private let reusableIdentifier = "NotificationCell"
+
 class NotificationsController: UITableViewController{
     // MARK: - Properties
     private var notifications = [Notification]() {
@@ -116,3 +117,5 @@ extension NotificationsController: NotificationDelegate {
         navigationController?.pushViewController(controller, animated: true)
     }
 }
+
+

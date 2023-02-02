@@ -8,8 +8,15 @@
 import UIKit
 import Firebase
 
+enum tabBarStatusType{
+    case tweet
+    case message
+}
+
 class MainTabController: UITabBarController {
     // MARK: - Properties
+    private var currentTabBar: tabBarStatusType = .tweet
+    
     var user: User?{
         didSet{
             // 사용자 정보를 정상적으로 불러오면 didSet이 작동한다.
@@ -24,7 +31,7 @@ class MainTabController: UITabBarController {
         }
     }
 
-    let actionButton: UIButton = {
+    var actionButton: UIButton = {
         let button = UIButton(type: .system)
         button.tintColor = .white
         button.backgroundColor = .twitterBlue
@@ -82,19 +89,24 @@ class MainTabController: UITabBarController {
     
     // MARK: - Selectors
     @objc func actionButtonTapped(){
-        // user가 nil이 아닌지 확인
         guard let user = user else { return }
-        // UploadTweetController에 Data를 전달하기위해 user를 매개변수로 하는 생성자로 초기화
-        /// UploadTweetController에 접근하는 모든 경우에, 앞으로 config라는 파라미터를 추가로 입력해야한다. 이 경우, 단순히 Tweet을 추가할때 사용하므로, .tweet
-        let controller = UploadTweetController(user: user,config: .tweet)
-        // 새로운 NavigationController를 만들려고하는데, 위에서 생성자 매개변수를 넣어주듯, 새로운 네비게이션 컨트롤러에는 RootVC가 뭔지 설정해주는 것이 필요하다.
+        var controller: UIViewController
+        switch currentTabBar {
+        case .tweet:
+            controller = UploadTweetController(user: user,config: .tweet)
+            print("DEBUG:새로운 트윗 창")
+        case .message:
+            controller = SearchController(config: .messages)
+            print("DEBUG:메세지 전송 창")
+        }
         let nav = UINavigationController(rootViewController: controller)
         nav.modalPresentationStyle = .fullScreen
-        // present는 pushViewController와는 다르게 새로 띄우는거다. 크롬으로 비유하자면, [새탭추가]가 아니라, [새창띄우기]
         present(nav,animated: true,completion: nil)
     }
     // MARK: - Helpers
     func configureUI(){
+        self.delegate = self
+        
         view.addSubview(actionButton)
         actionButton.anchor( bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.safeAreaLayoutGuide.rightAnchor, paddingBottom: 64, paddingRight: 16, width: 56, height: 56)
         
@@ -107,7 +119,7 @@ class MainTabController: UITabBarController {
         feed.delegate = self
         let nav1 = templateNavigationController(image: UIImage(named: "home_unselected"), rootViewController: feed)
         
-        let explore = ExploreController()
+        let explore = SearchController(config: .userSearch)
         let nav2 = templateNavigationController(image: UIImage(named: "search_unselected"), rootViewController: explore)
         
         let notifications = NotificationsController()
@@ -147,3 +159,12 @@ extension MainTabController: FeedControllerDelegate {
     }
 }
 
+extension MainTabController: UITabBarControllerDelegate {
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        guard let index = viewControllers?.firstIndex(of: viewController) else { return }
+        currentTabBar = (0...2).contains(index) ? .tweet : .message
+
+        let image = currentTabBar == .tweet ? UIImage(named: "new_tweet") : UIImage(named: "mail")
+        actionButton.setImage(image, for: .normal)
+    }
+}

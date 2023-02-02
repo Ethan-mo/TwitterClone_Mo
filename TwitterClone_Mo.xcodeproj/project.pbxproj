@@ -35,7 +35,7 @@
 		A9D7D5F02924B2D400697376 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9D7D5EE2924B2D400697376 /* LaunchScreen.storyboard */; };
 		A9D7D5FF2924B43700697376 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D7D5FE2924B43700697376 /* MainTabController.swift */; };
 		A9D7D6012924BB0000697376 /* FeedController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D7D6002924BB0000697376 /* FeedController.swift */; };
-		A9D7D6032924BB7B00697376 /* ExploreController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D7D6022924BB7B00697376 /* ExploreController.swift */; };
+		A9D7D6032924BB7B00697376 /* SearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D7D6022924BB7B00697376 /* SearchController.swift */; };
 		A9D7D6052924BCCF00697376 /* NotificationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D7D6042924BCCF00697376 /* NotificationsController.swift */; };
 		A9D7D6072924BCE800697376 /* ConversationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D7D6062924BCE800697376 /* ConversationsController.swift */; };
 		A9D7D6092924D82300697376 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D7D6082924D82300697376 /* Extension.swift */; };
@@ -89,7 +89,7 @@
 		A9D7D5F12924B2D400697376 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A9D7D5FE2924B43700697376 /* MainTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabController.swift; sourceTree = "<group>"; };
 		A9D7D6002924BB0000697376 /* FeedController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedController.swift; sourceTree = "<group>"; };
-		A9D7D6022924BB7B00697376 /* ExploreController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreController.swift; sourceTree = "<group>"; };
+		A9D7D6022924BB7B00697376 /* SearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchController.swift; sourceTree = "<group>"; };
 		A9D7D6042924BCCF00697376 /* NotificationsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsController.swift; sourceTree = "<group>"; };
 		A9D7D6062924BCE800697376 /* ConversationsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsController.swift; sourceTree = "<group>"; };
 		A9D7D6082924D82300697376 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
@@ -220,7 +220,7 @@
 				A9F4731E292E2D0C00B4D40C /* Authentication */,
 				A9D7D5FE2924B43700697376 /* MainTabController.swift */,
 				A9D7D6002924BB0000697376 /* FeedController.swift */,
-				A9D7D6022924BB7B00697376 /* ExploreController.swift */,
+				A9D7D6022924BB7B00697376 /* SearchController.swift */,
 				A9D7D6042924BCCF00697376 /* NotificationsController.swift */,
 				A9D7D6062924BCE800697376 /* ConversationsController.swift */,
 				A9F4732F29386E5A00B4D40C /* UploadTweetController.swift */,
@@ -408,7 +408,7 @@
 				A9A14E562966A479008F1D7F /* ActionSheetCell.swift in Sources */,
 				A9F47324292F072F00B4D40C /* Utilities.swift in Sources */,
 				A9D7D5E42924B2D000697376 /* AppDelegate.swift in Sources */,
-				A9D7D6032924BB7B00697376 /* ExploreController.swift in Sources */,
+				A9D7D6032924BB7B00697376 /* SearchController.swift in Sources */,
 				A9F4733C293F383200B4D40C /* ProfileController.swift in Sources */,
 				A96C436329407A7400D7C283 /* ProfileHeader.swift in Sources */,
 				A98DA1EF295ABD3F008A0557 /* TweetHeader.swift in Sources */,
