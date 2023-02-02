@@ -35,7 +35,11 @@ struct TweetService {
         }
     }
     func deleteTweet(tweetID:String, completion: @escaping(DatabaseCompletion)) {
-        REF_TWEETS.child(tweetID).removeValue(completionBlock: completion)
+        REF_TWEETS.child(tweetID).removeValue { err, ref in
+            guard let uid = Auth.auth().currentUser?.uid else { return }
+            REF_USER_TWEETS.child(uid).child(tweetID).removeValue(completionBlock: completion)
+        }
+        
         
     }
     func fetchTweet(withTweetID tweetID:String, completion: @escaping(Tweet) -> Void) {
@@ -54,8 +58,26 @@ struct TweetService {
     func fetchTweets(completion: @escaping([Tweet]) -> Void) {
         var tweets = [Tweet]()
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        
+        REF_USER_FOLLOWING.child(currentUid).observeSingleEvent(of: .value) { checkFollowingSnapshot in
+            if !checkFollowingSnapshot.exists(){
+                print("DEBUG:팔로우가 비어있음")
+                completion(tweets)
+            }
+        }
+        
+        
         REF_USER_FOLLOWING.child(currentUid).observe(.childAdded) { snapshot in
             let followingUid = snapshot.key
+            
+            REF_USER_TWEETS.child(followingUid).observeSingleEvent(of: .value) { checkSnapshot in
+                if !checkSnapshot.exists(){
+                    print("DEBUG:트윗이 비어있음")
+                    completion(tweets)
+                }
+                print("DEBUG:\(checkSnapshot)")
+            }
+            
             REF_USER_TWEETS.child(followingUid).observe(.childAdded) { snapshot in
                 let tweetID = snapshot.key
 

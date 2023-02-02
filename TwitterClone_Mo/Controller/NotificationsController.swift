@@ -36,6 +36,7 @@ class NotificationsController: UITableViewController{
     func fetchNotification() {
         refreshControl?.beginRefreshing()
         NotificationService.shard.fetchNotifications { notifications in
+
             self.refreshControl?.endRefreshing()
             self.notifications = notifications
             self.checkIfUserIsFollowed(notifications: notifications)
@@ -79,6 +80,9 @@ extension NotificationsController {
         return cell
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        if let notifications != [Notification]() else {
+//            notifications.append(Notification(name: ))
+//        }
         let notification = notifications[indexPath.row]
         guard let tweetID = notification.tweetID else { return }
         TweetService.shared.fetchTweet(withTweetID: tweetID) { tweet in

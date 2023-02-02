@@ -37,4 +37,5 @@ struct Notification {
             self.type = NotificationType(rawValue: type)
         }
     }
+    
 }
