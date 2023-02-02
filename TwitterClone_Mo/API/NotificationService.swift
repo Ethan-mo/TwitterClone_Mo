@@ -38,18 +38,8 @@ struct NotificationService {
 //        }
 //    }
     
-    func fetchNotifications(completion: @escaping([Notification]) -> Void) {
+    fileprivate func getNotifications(uid:String, completion: @escaping([Notification]) -> Void) {
         var notifications = [Notification]()
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        
-        // 여기에 우선 알람이 있는지 없는지를 판단하는 코드를 넣어 주어야한다.
-        REF_NOTIFICATION.child(uid).observeSingleEvent(of: .value) { snapshot in
-            if !snapshot.exists() {
-                print("DEBUG: 현재 비어있습니다. ")
-                completion(notifications)
-            }
-        }
-        
         REF_NOTIFICATION.child(uid).observe(.childAdded) { snapShot in
             guard let dictionary = snapShot.value  as? [String:AnyObject] else { return }
             guard let uid = dictionary["uid"] as? String else { return }
@@ -61,5 +51,22 @@ struct NotificationService {
             }
             
         }
+    }
+    
+    func fetchNotifications(completion: @escaping([Notification]) -> Void) {
+        let notifications = [Notification]()
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        // 여기에 우선 알람이 있는지 없는지를 판단하는 코드를 넣어 주어야한다.
+        REF_NOTIFICATION.child(uid).observeSingleEvent(of: .value) { snapshot in
+            if !snapshot.exists() {
+                print("DEBUG: 현재 비어있습니다. ")
+                completion(notifications)
+            } else {
+                getNotifications(uid: uid,completion: completion)
+            }
+        }
+        
+        
     }
 }

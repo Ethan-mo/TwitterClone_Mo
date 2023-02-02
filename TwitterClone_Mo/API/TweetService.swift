@@ -39,8 +39,6 @@ struct TweetService {
             guard let uid = Auth.auth().currentUser?.uid else { return }
             REF_USER_TWEETS.child(uid).child(tweetID).removeValue(completionBlock: completion)
         }
-        
-        
     }
     func fetchTweet(withTweetID tweetID:String, completion: @escaping(Tweet) -> Void) {
         // Tweets 폴더에서 특정 tweetID에 맞는 Tweets을 불러온다.
