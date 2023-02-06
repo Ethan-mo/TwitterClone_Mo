@@ -119,7 +119,7 @@ class MainTabController: UITabBarController {
         feed.delegate = self
         let nav1 = templateNavigationController(image: UIImage(named: "home_unselected"), rootViewController: feed)
         
-        let explore = SearchController(config: .userSearch)
+        let explore = SearchController(config: .userSearch )
         let nav2 = templateNavigationController(image: UIImage(named: "search_unselected"), rootViewController: explore)
         
         let notifications = NotificationsController()
@@ -163,6 +163,12 @@ extension MainTabController: UITabBarControllerDelegate {
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
         guard let index = viewControllers?.firstIndex(of: viewController) else { return }
         currentTabBar = (0...2).contains(index) ? .tweet : .message
+        
+        if currentTabBar == .message {
+            guard let nav = viewControllers?[index] as? UINavigationController else { return } // type은 NSArray
+            guard let conversation = nav.viewControllers.first as? ConversationsController else { return }
+            conversation.user = user
+        }
 
         let image = currentTabBar == .tweet ? UIImage(named: "new_tweet") : UIImage(named: "mail")
         actionButton.setImage(image, for: .normal)
