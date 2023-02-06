@@ -21,7 +21,13 @@ class ConversationsController: UIViewController{
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        UIApplication.shared.statusBarStyle = .lightContent
+        configureNavigationBar()
         configureUI()
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        UIApplication.shared.statusBarStyle = .lightContent
     }
     
     // MARK: - Selector
@@ -32,11 +38,26 @@ class ConversationsController: UIViewController{
     // MARK: - Helpers
     func configureUI() {
         view.backgroundColor = .white
-        navigationItem.title = "Messages"
-        
-        
         
     }
+    
+    func configureNavigationBar() {
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        appearance.backgroundColor = .twitterBlue
+        
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        
+        navigationItem.title = "Messages"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.isTranslucent = true
+    }
+    
+    
     func configureLeftBarButton() {
         guard let user = user else { return }
         print("DEBUG: 현재 user값은: \(user)")
