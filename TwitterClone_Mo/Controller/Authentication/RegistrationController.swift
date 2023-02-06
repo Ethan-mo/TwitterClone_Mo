@@ -83,6 +83,9 @@ class RegistrationController: UIViewController{
     @objc func handleSignUp(){
         guard let profileImage = profileImage else {
             print("DEBUG: Please select a profile image..")
+            self.customAlert(view: self, alertTitle: "알림", alertMessage: "프로필이미지를 다시 선택해주세요.") { _ in
+                return
+            }
             return
         }
         guard let email = emailTextField.text else { return }
@@ -90,14 +93,21 @@ class RegistrationController: UIViewController{
         guard let fullname = fullNameTextField.text else { return }
         guard let username = nickNameTextField.text?.lowercased() else { return }
         print("DEBUG: 아이디 생성하기")
+        showLoader(true, withText: "Registering")
         let credentials = AuthCredentials(email: email, password: password, fullname: fullname,
                                           username: username, profileImage: profileImage)
         
-        AuthService.shared.registerUser(credentials: credentials) { (error, ref) in
-            print(error)
+        AuthService.shared.registerUser(viewController: self, credentials: credentials) { (error, ref) in
+            if let error = error {
+                print(error)
+                self.showLoader(false)
+                return
+            }
+            
             guard let window = UIApplication.shared.windows.first(where: {$0.isKeyWindow}) else { return }
             guard let tab = window.rootViewController as? MainTabController else { return }
             tab.authenticateUserAndConfigureUI()
+            self.showLoader(false)
             self.dismiss(animated: true)
         }
         

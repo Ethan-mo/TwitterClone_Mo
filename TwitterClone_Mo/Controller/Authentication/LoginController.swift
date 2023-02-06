@@ -13,7 +13,7 @@ class LoginController: UIViewController{
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
         iv.clipsToBounds = true
-        iv.image = #imageLiteral(resourceName: "TwitterLogo")
+        iv.image = #imageLiteral(resourceName: "twitter_logo_blue")
         return iv
     }()
     
@@ -61,15 +61,18 @@ class LoginController: UIViewController{
         print("Handle ShowSighUp")
         guard let email = emailTextField.text else { return print("DEBUG: Please enter your email") }
         guard let password = passwordTextField.text else { return print("DEBUG: Please enter your password") }
+        showLoader(true, withText: "Logging in")
         AuthService.shared.logUserIn(withEmail: email, password: password) { (result, error) in
             if let error = error {
                 print("DEBUG: Error logging in \(error.localizedDescription)")
+                self.showLoader(false)
                 return
             }
             print("DEBUG: Successful log in ..")
             guard let window = UIApplication.shared.windows.first(where: {$0.isKeyWindow}) else { return }
             guard let tab = window.rootViewController as? MainTabController else { return }
             tab.authenticateUserAndConfigureUI()
+            self.showLoader(false)
             self.dismiss(animated: true)
         }
     }
@@ -79,7 +82,8 @@ class LoginController: UIViewController{
     }
         // MARK: - Helpers
     func configureUI(){
-        view.backgroundColor = .twitterBlue
+        //view.backgroundColor = .twitterBlue
+        configureGradientLayer()
         
         /// NavigationController에 대한 Setting
         navigationController?.navigationBar.barStyle = .black // 이부분을 통해, 디바이스 가장 위 상태버튼들의 색상이 흰색으로 바뀐다.(네비게이션 바가 검은색이니, 대비되게 흰색으로 바뀌는 것)
@@ -101,6 +105,14 @@ class LoginController: UIViewController{
         view.addSubview(dontAccountButton)
         dontAccountButton.anchor(left:view.leftAnchor,bottom:view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor,paddingLeft: 40 ,paddingBottom: 16,paddingRight: 40)
     }
+    func configureGradientLayer() {
+        let gradient = CAGradientLayer()
+        gradient.colors = [UIColor.white.cgColor, UIColor.twitterBlue.cgColor]
+        gradient.locations = [0, 1]
+        view.layer.addSublayer(gradient)
+        gradient.frame = view.frame
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }

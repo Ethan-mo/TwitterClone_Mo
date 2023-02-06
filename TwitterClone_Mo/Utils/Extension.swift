@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import JGProgressHUD
 
 extension UIView {
     func anchor(top: NSLayoutYAxisAnchor? = nil,
@@ -94,4 +95,25 @@ extension UIColor {
     static let mainBlue = UIColor(named: "mainBlue")
     static let customRed = UIColor(named: "customRed")
     static let customPurple = UIColor(named: "customPurple")
+}
+
+extension UIViewController {
+    static let hud = JGProgressHUD(style: .dark)
+    func showLoader(_ show: Bool, withText text : String? = "Loading") {
+        view.endEditing(true)
+        
+        UIViewController.hud.textLabel.text = text
+        if show {
+            UIViewController.hud.show(in: view)
+        } else {
+            UIViewController.hud.dismiss()
+        }
+    }
+    func customAlert(view:UIViewController, alertTitle:String, alertMessage:String,completion:@escaping(UIAlertAction) -> Void) {
+        let alert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
+        let action = UIAlertAction(title: "확인", style: .cancel, handler: completion)
+        alert.addAction(action)
+        view.present(alert, animated: true)
+    }
+    
 }

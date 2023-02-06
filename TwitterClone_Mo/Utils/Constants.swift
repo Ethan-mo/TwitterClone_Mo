@@ -13,6 +13,8 @@ let STORAGE_PROFILE_IMAGES = STORAGE_REF.child("profile_images")
 
 // 데이터베이스에서 데이터를 읽거나 쓰려면 DatabaseReference의 인스턴스가 필요하다.
 let DB_REF = Database.database().reference()
+let FS_REF = Firestore.firestore().collection("users")
+
 let REF_USERS = DB_REF.child("users")
 let REF_USER_USERNAMES = DB_REF.child("user-usernames")
 

@@ -27,7 +27,7 @@ struct AuthService{
     // reference()는 현재 App에서 발생한 특정 Data를 Firebase의 Database에 저장
     // Child는 폴더와 같은 역할, 이를 통해서 DB상에 User폴더안에 특정 uid별로 DB가 저장된다.
     
-    func registerUser(credentials:AuthCredentials, completion: @escaping(Error?, DatabaseReference) -> Void){
+    func registerUser(viewController:UIViewController, credentials:AuthCredentials, completion: @escaping(Error?, DatabaseReference) -> Void){
         let email = credentials.email
         let password = credentials.password
         let fullname = credentials.fullname
@@ -42,13 +42,33 @@ struct AuthService{
         let storageRef = STORAGE_PROFILE_IMAGES.child(filename)
         // 4) 특정 위치에 image Data저장하기
         storageRef.putData(imageData,metadata: nil){ (meta, error) in
+            if let error = error{
+                print("DEBUG: Error is \(error.localizedDescription)")
+                viewController.showLoader(false)
+                viewController.customAlert(view: viewController, alertTitle: "알림", alertMessage: "프로필이미지를 다시 선택해주세요.") { _ in
+                    return
+                }
+                return
+            }
             // 5) 저장된 Image Data를 다운로드 받을 수 있는 Url을 불러온다.
             storageRef.downloadURL { (url,error) in
+                if let error = error{
+                    print("DEBUG: Error is \(error.localizedDescription)")
+                    viewController.showLoader(false)
+                    viewController.customAlert(view: viewController, alertTitle: "알림", alertMessage: "이미지값을 서버에서 가져오는데 실패했습니다.") { _ in
+                        return
+                    }
+                    return
+                }
                 guard let profileImageUrl = url?.absoluteString else { return }
                 // 1) 새로운 계정을 생성한다. 트위터 클론강의에서는 email과 password만 사용하였다.
                 Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
                     if let error = error{
                         print("DEBUG: Error is \(error.localizedDescription)")
+                        viewController.showLoader(false)
+                        viewController.customAlert(view: viewController, alertTitle: "알림", alertMessage: "이메일 또는 비밀번호가 부적절합니다.") { _ in
+                            return
+                        }
                         return
                     }
                     guard let uid = result?.user.uid else { return }
@@ -60,6 +80,18 @@ struct AuthService{
                     // 2) 회원가입 인증으로 생성된 계정의 uid를 불러오고, 해당 uid를 가진 User Data에 접근하는 Reference인스턴스를 통해 Data를 저장한다.
                     REF_USERS.child(uid).updateChildValues(values, withCompletionBlock: completion)
                     REF_USER_USERNAMES.updateChildValues([username:uid])
+                    print("DEBUG3️⃣: Realtime DB에 유저 정보등록에 성공했습니다.")
+                    Firestore.firestore().collection("users").document(uid).setData(values) { error in
+                        if let error = error {
+                            print("DEBUG3️⃣: 유저 정보등록에 실패했습니다. error: \(error.localizedDescription)")
+                            viewController.showLoader(false)
+                            viewController.customAlert(view: viewController, alertTitle: "알림", alertMessage: "계정등록에 실패하였습니다.") { _ in
+                                return
+                            }
+                            return
+                        }
+                        print("DEBUG3️⃣: 유저 정보등록에 성공했습니다.")
+                    }
                 }
             }
         }
