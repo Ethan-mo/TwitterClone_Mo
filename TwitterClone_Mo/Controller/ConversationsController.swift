@@ -6,6 +6,8 @@
 //
 import UIKit
 
+private let reuseIdentifier: String = "ConversationCell"
+
 class ConversationsController: UIViewController{
     // MARK: - Properties
     var user: User? {
@@ -17,12 +19,12 @@ class ConversationsController: UIViewController{
             
         }
     }
+    private let tableView = UITableView()
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         UIApplication.shared.statusBarStyle = .lightContent
-        configureNavigationBar()
         configureUI()
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -38,12 +40,29 @@ class ConversationsController: UIViewController{
     // MARK: - Helpers
     func configureUI() {
         view.backgroundColor = .white
+        configureNavigationBar()
+        configureTableView()
         
+    }
+    
+    func configureTableView() {
+        tableView.backgroundColor = .white
+        tableView.rowHeight = 80
+        
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier:  reuseIdentifier)
+        tableView.tableFooterView = UIView()
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        
+        view.addSubview(tableView)
+        tableView.frame = view.frame
     }
     
     func configureNavigationBar() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
         appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
         appearance.backgroundColor = .twitterBlue
         
@@ -76,4 +95,20 @@ class ConversationsController: UIViewController{
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: iv)
     }
     
+}
+
+extension ConversationsController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("DEBUG: 선택했습니다.\(indexPath.row)")
+    }
+}
+extension ConversationsController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)// as! ConversationCell
+        cell.textLabel?.text = "Test CEll"
+        return cell
+    }
 }
