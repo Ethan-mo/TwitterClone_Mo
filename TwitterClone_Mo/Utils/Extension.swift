@@ -115,5 +115,26 @@ extension UIViewController {
         alert.addAction(action)
         view.present(alert, animated: true)
     }
+    func configureNavigationBar(withTitle: String, prefersLargeTitles: Bool) {
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        appearance.backgroundColor = .systemPurple
+        
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        
+        navigationItem.title = withTitle
+        navigationController?.navigationBar.prefersLargeTitles = prefersLargeTitles
+        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.isTranslucent = true
+        
+        // 왜인지 모르겠지만 아래 코드가 먹히지 않음.
+        //navigationController?.navigationBar.overrideUserInterfaceStyle = .dark
+        // 그래서 UIApplication.shared.statusBarStyle = .lightContent 코드를 사용함.
+        UIApplication.shared.statusBarStyle = .lightContent
+    }
     
 }

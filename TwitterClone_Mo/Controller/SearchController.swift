@@ -9,6 +9,10 @@ import UIKit
 
 private let reuseIdentifier = "userCell"
 
+protocol SearchControllerDelegate: class {
+    func controller(_ controller: SearchController, wantsToChatUser user : User)
+}
+
 enum SearchControllerConfiguration {
     case messages
     case userSearch
@@ -19,6 +23,8 @@ class SearchController: UITableViewController{
     // MARK: - Properties
     
     private let config: SearchControllerConfiguration
+    
+    weak var delegate: SearchControllerDelegate?
     
     private var users:[User] = [] {
         didSet{ tableView.reloadData() }
@@ -99,9 +105,8 @@ extension SearchController {
         return cell
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let user = isSearchMode ? filteredUsers[indexPath.row] : users[indexPath.row]
-        let controller = ProfileController(user: user)
-        navigationController?.pushViewController(controller, animated: true)
+        let user = isSearchMode ? filteredUsers[indexPath.row] : users[indexPath.row] 
+        delegate?.controller(self, wantsToChatUser: user)
     }
 }
 extension SearchController: UISearchResultsUpdating {

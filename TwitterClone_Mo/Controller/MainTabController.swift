@@ -96,7 +96,9 @@ class MainTabController: UITabBarController {
             controller = UploadTweetController(user: user,config: .tweet)
             print("DEBUG:새로운 트윗 창")
         case .message:
-            controller = SearchController(config: .messages)
+            var chat = SearchController(config: .messages)
+            chat.delegate = self
+            controller = chat
             print("DEBUG:메세지 전송 창")
         }
         let nav = UINavigationController(rootViewController: controller)
@@ -173,4 +175,17 @@ extension MainTabController: UITabBarControllerDelegate {
         let image = currentTabBar == .tweet ? UIImage(named: "new_tweet") : UIImage(named: "mail")
         actionButton.setImage(image, for: .normal)
     }
+}
+
+extension MainTabController: SearchControllerDelegate {
+    func controller(_ controller: SearchController, wantsToChatUser user: User) {
+        print("DEUBG: 여기까지는 실행이 된다.")
+        controller.dismiss(animated: true)
+        let chat = ChatController(user: user)
+        let nav = UINavigationController(rootViewController: chat)
+        nav.modalPresentationStyle = .fullScreen
+        present(nav,animated: true,completion: nil)
+    }
+    
+    
 }
