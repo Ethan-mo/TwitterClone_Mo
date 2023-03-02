@@ -12,8 +12,11 @@ private let reuseIdentifier = "MessageCell"
 class ChatController: UICollectionViewController {
     // MARK: - Properties
     private let user: User
+    private var messages = [Message]()
+    private var fromCurrentUser = false
     private lazy var customInputView: CustomInputAccessoryView = {
         let iv = CustomInputAccessoryView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 50))
+        iv.delegate = self
         return iv
     }()
     // MARK: - Lifecycle
@@ -55,10 +58,12 @@ class ChatController: UICollectionViewController {
 
 extension ChatController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return messages.count
     }
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! MessageCell
+        cell.message = messages[indexPath.row]
+        cell.profileImageView.sd_setImage(with: user.profileImageUrl)
         return cell
     }
 }
@@ -72,3 +77,11 @@ extension ChatController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+extension ChatController: CustomInputAccessoryViewDelegate {
+    func inputView(_ inputview: CustomInputAccessoryView, wantsToSend message: String) {
+        fromCurrentUser.toggle()
+        var tempMessage = Message(message: message, isCurrentUser: fromCurrentUser)
+        messages.append(tempMessage)
+        collectionView.reloadData()
+    }
+}

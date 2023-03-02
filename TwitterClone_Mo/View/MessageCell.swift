@@ -9,7 +9,16 @@ import UIKit
 
 class MessageCell: UICollectionViewCell {
     // MARK: - Properties
-    private lazy var profileImageView: UIImageView = {
+    var message: Message? {
+        didSet{
+            configure()
+        }
+    }
+    private var bubbleLeftContainer: NSLayoutConstraint!
+    private var bubbleRightContainer: NSLayoutConstraint!
+    
+    
+    lazy var profileImageView: UIImageView = {
         let profileIV = UIImageView()
         profileIV.backgroundColor = .lightGray
         profileIV.contentMode = .scaleAspectFill
@@ -29,13 +38,13 @@ class MessageCell: UICollectionViewCell {
     
     private let bubbleContainer: UIView = {
         let view = UIView()
-        view.backgroundColor = .systemPurple
+        view.backgroundColor = .twitterBlue
         return view
     }()
     // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .red
+        backgroundColor = .white
         
         addSubview(profileImageView)
         profileImageView.anchor(left:leftAnchor, bottom: bottomAnchor, paddingLeft: 8, paddingBottom: -4)
@@ -44,8 +53,14 @@ class MessageCell: UICollectionViewCell {
         
         addSubview(bubbleContainer)
         bubbleContainer.layer.cornerRadius = 12
-        bubbleContainer.anchor(top: topAnchor, left: profileImageView.rightAnchor, paddingLeft: 12)
+        bubbleContainer.anchor(top: topAnchor)
         bubbleContainer.widthAnchor.constraint(lessThanOrEqualToConstant: 250).isActive = true
+        
+        bubbleLeftContainer = bubbleContainer.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 12)
+        bubbleLeftContainer.isActive = false
+        bubbleRightContainer = bubbleContainer.rightAnchor.constraint(equalTo: rightAnchor, constant: -12)
+        bubbleRightContainer.isActive = false
+        
         
         bubbleContainer.addSubview(textView)
         textView.anchor(top:bubbleContainer.topAnchor, left: bubbleContainer.leftAnchor, bottom: bubbleContainer.bottomAnchor, right: bubbleContainer.rightAnchor, paddingTop: 4, paddingLeft: 12, paddingBottom: 4, paddingRight: 12)
@@ -56,4 +71,17 @@ class MessageCell: UICollectionViewCell {
     }
     
     // MARK: - Helper
+    func configure() {
+        guard let message = message else { return }
+        let viewModel = MessageViewModel(message: message)
+        bubbleContainer.backgroundColor = viewModel.isTextBackgroundColor
+        textView.textColor = viewModel.isTextColor
+        
+        bubbleLeftContainer.isActive = viewModel.bubbleLeftAnchor
+        bubbleRightContainer.isActive = viewModel.bubbleRightAnchor
+        
+        profileImageView.isHidden = viewModel.isProfileImage
+        
+        textView.text = message.message
+    }
 }
