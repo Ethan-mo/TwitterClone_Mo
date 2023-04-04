@@ -33,6 +33,7 @@ class ChatController: UICollectionViewController {
         super.viewDidLoad()
         print("DEBUG: ChatController가 실행되었습니다.")
         configureUI()
+        fetchMessage()
     }
     // 키보드와 함께 사용자 입력작업을 수행하는 뷰 컨트롤러에서 사용하는 것이다.
     // customInputView를 사용할 때, 사용하고자 한다.
@@ -45,6 +46,14 @@ class ChatController: UICollectionViewController {
     
     // MARK: - Selector
     // MARK: - API
+    func fetchMessage() {
+        MessageService.fetchMessage(forUser: user) { messages in
+            self.messages = messages
+            print("가져온 데이터는: \(messages)이다.")
+            self.collectionView.reloadData()
+            self.collectionView.scrollToItem(at: [0, self.messages.count - 1], at: .bottom, animated: true)
+        }
+    }
     // MARK: - Helper
     
     func configureUI() {
@@ -53,6 +62,7 @@ class ChatController: UICollectionViewController {
         
         collectionView.register(MessageCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         collectionView.alwaysBounceVertical = true
+        collectionView.keyboardDismissMode = .interactive
     }
 }
 
@@ -73,15 +83,26 @@ extension ChatController: UICollectionViewDelegateFlowLayout {
         return .init(top: 16, left: 0, bottom: 16, right: 0)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: 50)
+        let frame = CGRect(x: 0,y: 0,width: view.frame.width, height: 50)
+        let estimatedSizeCell = MessageCell(frame: frame)
+        estimatedSizeCell.message = messages[indexPath.row]
+        estimatedSizeCell.layoutIfNeeded()
+        
+        let targetSize = CGSize(width: view.frame.width, height: 1000)
+        let estimatedSize = estimatedSizeCell.systemLayoutSizeFitting(targetSize)
+        
+        return .init(width: view.frame.width, height: estimatedSize.height)
     }
 }
 
 extension ChatController: CustomInputAccessoryViewDelegate {
-    func inputView(_ inputview: CustomInputAccessoryView, wantsToSend message: String) {
-        fromCurrentUser.toggle()
-        var tempMessage = Message(message: message, isCurrentUser: fromCurrentUser)
-        messages.append(tempMessage)
-        collectionView.reloadData()
+    func inputView(_ inputView: CustomInputAccessoryView, wantsToSend message: String) {
+        MessageService.uploadMessage(message, to: user) { error in
+            if let error = error {
+                print("오류발생")
+                return
+            }
+            inputView.clearMessageText()
+        }
     }
 }

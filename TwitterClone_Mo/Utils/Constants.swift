@@ -15,6 +15,8 @@ let STORAGE_PROFILE_IMAGES = STORAGE_REF.child("profile_images")
 let DB_REF = Database.database().reference()
 let FS_REF = Firestore.firestore().collection("users")
 
+let FS_MESSAGE = Firestore.firestore().collection("message")
+
 let REF_USERS = DB_REF.child("users")
 let REF_USER_USERNAMES = DB_REF.child("user-usernames")
 

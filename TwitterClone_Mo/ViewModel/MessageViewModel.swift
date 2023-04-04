@@ -8,23 +8,26 @@
 import UIKit
 
 struct MessageViewModel {
-    var message: Message
+    private let message: Message
     
-    var isTextBackgroundColor: UIColor {
-        return message.isCurrentUser ? #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1) : .systemPurple
+    var messageBackgroundColor: UIColor {
+        return message.isFromCurrentUser ? #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1) : .systemPurple
     }
-    var isTextColor: UIColor {
-        return message.isCurrentUser ? .black : .white
+    
+    var messageTextColor: UIColor {
+        return message.isFromCurrentUser ? .black : .white
     }
-    var bubbleLeftAnchor: Bool {
-        return !message.isCurrentUser
+    
+    var rightAnchorActive: Bool {
+        return message.isFromCurrentUser
     }
-    var bubbleRightAnchor: Bool {
-        return message.isCurrentUser
+    var leftAnchorActive: Bool {
+        return !message.isFromCurrentUser
     }
-    var isProfileImage: Bool {
-        return message.isCurrentUser
+    var shouldHideProfileImage: Bool {
+        return message.isFromCurrentUser
     }
+    
     init(message: Message) {
         self.message = message
     }

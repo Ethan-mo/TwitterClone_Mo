@@ -8,7 +8,7 @@
 import UIKit
 
 protocol CustomInputAccessoryViewDelegate: class {
-    func inputView(_ inputview: CustomInputAccessoryView, wantsToSend message: String)
+    func inputView(_ inputView: CustomInputAccessoryView, wantsToSend message: String)
 }
 
 class CustomInputAccessoryView: UIView {
@@ -85,6 +85,9 @@ class CustomInputAccessoryView: UIView {
     }
     
     // MARK: - Helper
-    
+    func clearMessageText() {
+        messageInputTextView.text = nil
+        placeholderLabel.isHidden = false
+    }
 }
 

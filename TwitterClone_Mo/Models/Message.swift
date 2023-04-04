@@ -6,8 +6,23 @@
 //
 
 import UIKit
+import Firebase
 
 struct Message {
-    var message: String
-    var isCurrentUser: Bool
+    let text: String
+    let toID: String
+    let fromID: String
+    var timestamp: Timestamp!
+    var user: User?
+    
+    let isFromCurrentUser: Bool
+    
+    init(dictionary: [String: Any]) {
+        self.text = dictionary["text"] as? String ?? ""
+        self.toID = dictionary["toId"] as? String ?? ""
+        self.fromID = dictionary["fromId"] as? String ?? ""
+        self.timestamp = dictionary["timestamp"] as? Timestamp ?? Timestamp(date: Date())
+        
+        self.isFromCurrentUser = fromID == Auth.auth().currentUser?.uid ? true : false
+    }
 }

@@ -1,23 +1,20 @@
 //
 //  MessageCell.swift
-//  TwitterClone_Mo
+//  ChatWithFirestore
 //
-//  Created by 모상현 on 2023/02/28.
+//  Created by 모상현 on 2023/02/27.
 //
 
 import UIKit
+import SDWebImage
 
 class MessageCell: UICollectionViewCell {
     // MARK: - Properties
     var message: Message? {
-        didSet{
-            configure()
-        }
+        didSet{ configure() }
     }
-    private var bubbleLeftContainer: NSLayoutConstraint!
-    private var bubbleRightContainer: NSLayoutConstraint!
-    
-    
+    var bubbleLeftAnchor: NSLayoutConstraint!
+    var bubbleRightAnchor: NSLayoutConstraint!
     lazy var profileImageView: UIImageView = {
         let profileIV = UIImageView()
         profileIV.backgroundColor = .lightGray
@@ -38,13 +35,12 @@ class MessageCell: UICollectionViewCell {
     
     private let bubbleContainer: UIView = {
         let view = UIView()
-        view.backgroundColor = .twitterBlue
+        view.backgroundColor = .systemPurple
         return view
     }()
     // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .white
         
         addSubview(profileImageView)
         profileImageView.anchor(left:leftAnchor, bottom: bottomAnchor, paddingLeft: 8, paddingBottom: -4)
@@ -53,14 +49,13 @@ class MessageCell: UICollectionViewCell {
         
         addSubview(bubbleContainer)
         bubbleContainer.layer.cornerRadius = 12
-        bubbleContainer.anchor(top: topAnchor)
+        bubbleContainer.anchor(top: topAnchor, bottom: bottomAnchor)
         bubbleContainer.widthAnchor.constraint(lessThanOrEqualToConstant: 250).isActive = true
         
-        bubbleLeftContainer = bubbleContainer.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 12)
-        bubbleLeftContainer.isActive = false
-        bubbleRightContainer = bubbleContainer.rightAnchor.constraint(equalTo: rightAnchor, constant: -12)
-        bubbleRightContainer.isActive = false
-        
+        bubbleLeftAnchor = bubbleContainer.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 12)
+        bubbleLeftAnchor.isActive = false
+        bubbleRightAnchor = bubbleContainer.rightAnchor.constraint(equalTo: rightAnchor, constant: -12)
+        bubbleRightAnchor.isActive = false
         
         bubbleContainer.addSubview(textView)
         textView.anchor(top:bubbleContainer.topAnchor, left: bubbleContainer.leftAnchor, bottom: bubbleContainer.bottomAnchor, right: bubbleContainer.rightAnchor, paddingTop: 4, paddingLeft: 12, paddingBottom: 4, paddingRight: 12)
@@ -74,14 +69,13 @@ class MessageCell: UICollectionViewCell {
     func configure() {
         guard let message = message else { return }
         let viewModel = MessageViewModel(message: message)
-        bubbleContainer.backgroundColor = viewModel.isTextBackgroundColor
-        textView.textColor = viewModel.isTextColor
+        bubbleContainer.backgroundColor = viewModel.messageBackgroundColor
+        textView.textColor = viewModel.messageTextColor
+        textView.text = message.text
         
-        bubbleLeftContainer.isActive = viewModel.bubbleLeftAnchor
-        bubbleRightContainer.isActive = viewModel.bubbleRightAnchor
+        bubbleLeftAnchor.isActive = viewModel.leftAnchorActive
+        bubbleRightAnchor.isActive = viewModel.rightAnchorActive
         
-        profileImageView.isHidden = viewModel.isProfileImage
-        
-        textView.text = message.message
+        profileImageView.isHidden = viewModel.shouldHideProfileImage
     }
 }
