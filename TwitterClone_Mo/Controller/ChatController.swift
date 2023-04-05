@@ -45,6 +45,9 @@ class ChatController: UICollectionViewController {
     }
     
     // MARK: - Selector
+    @objc func hanldeDismissal() {
+        self.dismiss(animated: true)
+    }
     // MARK: - API
     func fetchMessage() {
         MessageService.fetchMessage(forUser: user) { messages in
@@ -63,6 +66,8 @@ class ChatController: UICollectionViewController {
         collectionView.register(MessageCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         collectionView.alwaysBounceVertical = true
         collectionView.keyboardDismissMode = .interactive
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(hanldeDismissal))
     }
 }
 

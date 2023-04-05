@@ -22,6 +22,22 @@ struct MessageService {
             })
         }
     }
+    static func fetchConversations(completion: @escaping([Conversation]) -> Void) {
+        var conversations = [Conversation]()
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        let query = FS_MESSAGE.document(uid).collection("recent-messages").order(by: "timestamp")
+        query.addSnapshotListener { snapshot, error in
+            snapshot?.documentChanges.forEach({ change in
+                let dictionary = change.document.data()
+                let message = Message(dictionary: dictionary)
+                UserService.shared.fetchUser(uid: message.toID) { user in
+                    let conversation = Conversation(user: user, message: message)
+                    conversations.append(conversation)
+                    completion(conversations)
+                }
+            })
+        }
+    }
     static func uploadMessage(_ message: String, to user: User, completion: ((Error?) -> Void)?) {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
         let data = ["text": message, "fromId": currentUid, "toId": user.uid, "timestamp": Timestamp(date: Date())] as [String : Any]
@@ -30,6 +46,9 @@ struct MessageService {
                 return
             }
             FS_MESSAGE.document(user.uid).collection(currentUid).addDocument(data: data, completion: completion)
+            FS_MESSAGE.document(user.uid).collection("recent-messages").document(currentUid).setData(data)
+            FS_MESSAGE.document(currentUid).collection("recent-messages").document(user.uid).setData(data)
+            
         }
     }
 }

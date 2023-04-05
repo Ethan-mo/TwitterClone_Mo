@@ -16,7 +16,11 @@ class ConversationsController: UIViewController{
             print("DEBUG: \(user)")
             print("DEBUG: 메세지에서 정상실행됨")
             configureLeftBarButton()
-            
+        }
+    }
+    var conversations = [Conversation]() {
+        didSet{
+            tableView.reloadData()
         }
     }
     private let tableView = UITableView()
@@ -26,6 +30,7 @@ class ConversationsController: UIViewController{
         super.viewDidLoad()
         UIApplication.shared.statusBarStyle = .lightContent
         configureUI()
+        fetchConversation()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -35,6 +40,12 @@ class ConversationsController: UIViewController{
     // MARK: - Selector
     @objc func handleProfileImage() {
         print("DEBUG: 짜잔~")
+    }
+    // MARK: - API
+    func fetchConversation() {
+        MessageService.fetchConversations { conversations in
+            self.conversations = conversations
+        }
     }
     
     // MARK: - Helpers
@@ -49,7 +60,7 @@ class ConversationsController: UIViewController{
         tableView.backgroundColor = .white
         tableView.rowHeight = 80
         
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier:  reuseIdentifier)
+        tableView.register(ConversationCell.self, forCellReuseIdentifier:  reuseIdentifier)
         tableView.tableFooterView = UIView()
         
         tableView.delegate = self
@@ -95,20 +106,28 @@ class ConversationsController: UIViewController{
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: iv)
     }
     
+    func showChatController(_ user: User) {
+        let controller = ChatController(user: user)
+        let nav = UINavigationController(rootViewController: controller)
+        nav.modalPresentationStyle = .fullScreen
+        present(nav,animated: true,completion: nil)
+    }
 }
 
 extension ConversationsController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("DEBUG: 선택했습니다.\(indexPath.row)")
+        let user = conversations[indexPath.row].user
+        showChatController(user)
     }
 }
 extension ConversationsController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return conversations.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)// as! ConversationCell
-        cell.textLabel?.text = "Test CEll"
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! ConversationCell
+        cell.conversation = conversations[indexPath.row]
         return cell
     }
 }
