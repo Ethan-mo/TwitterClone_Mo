@@ -27,6 +27,7 @@ class ConversationsController: UIViewController{
             tableView.reloadData()
         }
     }
+    var conversationsDictionary = [String : Conversation]()
     private let tableView = UITableView()
     weak var delegate:ConversationControllerDelegate?
     
@@ -54,7 +55,11 @@ class ConversationsController: UIViewController{
     // MARK: - API
     func fetchConversation() {
         MessageService.fetchConversations { conversations in
-            self.conversations = conversations
+            conversations.forEach { conversation in
+                let message = conversation.message
+                self.conversationsDictionary[message.chatToId] = conversation // Dictionary에 데이터를 추가
+            }
+            self.conversations = Array(self.conversationsDictionary.values)
         }
     }
     
