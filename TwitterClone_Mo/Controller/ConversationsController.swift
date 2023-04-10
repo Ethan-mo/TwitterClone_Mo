@@ -8,6 +8,10 @@ import UIKit
 
 private let reuseIdentifier: String = "ConversationCell"
 
+protocol ConversationControllerDelegate : class {
+    func remoteLogout()
+}
+
 class ConversationsController: UIViewController{
     // MARK: - Properties
     var user: User? {
@@ -24,6 +28,7 @@ class ConversationsController: UIViewController{
         }
     }
     private let tableView = UITableView()
+    weak var delegate:ConversationControllerDelegate?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -35,11 +40,16 @@ class ConversationsController: UIViewController{
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         UIApplication.shared.statusBarStyle = .lightContent
+        navigationController?.navigationBar.isHidden = false
     }
     
     // MARK: - Selector
     @objc func handleProfileImage() {
         print("DEBUG: 짜잔~")
+        guard let user = user else { return }
+        let controller = ProfileController(user: user)
+        controller.delegate = self
+        navigationController?.pushViewController(controller, animated: true)
     }
     // MARK: - API
     func fetchConversation() {
@@ -129,5 +139,11 @@ extension ConversationsController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! ConversationCell
         cell.conversation = conversations[indexPath.row]
         return cell
+    }
+}
+extension ConversationsController: ProfileControllerDelegate {
+    func remoteLogout() {
+        print("DEBUG: remoteLogout()이 실행됨")
+        delegate?.remoteLogout()
     }
 }

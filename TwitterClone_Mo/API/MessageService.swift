@@ -30,7 +30,7 @@ struct MessageService {
             snapshot?.documentChanges.forEach({ change in
                 let dictionary = change.document.data()
                 let message = Message(dictionary: dictionary)
-                UserService.shared.fetchUser(uid: message.toID) { user in
+                UserService.shared.fetchUser(uid: message.chatToId) { user in
                     let conversation = Conversation(user: user, message: message)
                     conversations.append(conversation)
                     completion(conversations)
